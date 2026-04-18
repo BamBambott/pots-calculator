@@ -633,16 +633,31 @@ font-weight: 700;
 transition: all 0.3s;
 }
 
+/* Compare wrap - portrait default */
+.compare-wrap .rcard { margin-left: 16px; margin-right: 16px; }
+
 /* Landscape fix */
 @media (orientation: landscape) {
 .page { max-width: 100%; padding-bottom: 40px; }
 .nav { position: relative; }
 .sec-head { padding: 14px 16px 8px; }
 .sec-title { font-size: 18px; }
-.card, .rcard, .vcard, .bkcard, .bento, .fcard { margin-left: 16px; margin-right: 16px; }
-.bento { grid-template-columns: repeat(3,1fr); }
+.card, .vcard, .bkcard, .fcard { margin-left: 16px; margin-right: 16px; }
+.bento { grid-template-columns: repeat(3,1fr); margin-left: 16px; margin-right: 16px; }
 .bcard.wide { grid-column: span 3; }
-.ryield { font-size: 40px; }
+.ryield { font-size: 36px; }
+
+/* Side by side cards in landscape */
+.compare-wrap {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin: 0 16px 10px;
+}
+
+.compare-wrap .rcard {
+margin: 0;
+}
 }
 
 @media (min-width: 600px) {
@@ -786,6 +801,10 @@ line-height: 1.6;
 
   </div>
 
+  <!-- Compare Wrap -->
+
+  <div class="compare-wrap">
+
   <!-- Polymarket Card -->
 
   <div class="rcard dead">
@@ -842,7 +861,8 @@ line-height: 1.6;
       <div class="btn btn-green">EARNING<span class="btn-sub" id="potsSub">$15.34 at 8% APY</span></div>
       <div class="btn" style="background:#1A1A24;color:#6B7280;">IDLE<span class="btn-sub">$0.00</span></div>
     </div>
-  </div>
+  </div><!-- end POTS card -->
+  </div><!-- end compare-wrap -->
 
   <!-- Verdict -->
 
