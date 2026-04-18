@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 
-<html lang="en" style="background:#050709;">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A0A0F">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#050709">
 <title>POTS Capital Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after {
   margin: 0; padding: 0;
@@ -16,201 +16,204 @@
   color-scheme: dark;
 }
 
-html {
-background: #050709 !important;
-color-scheme: dark;
-}
-
-body {
-background: #050709 !important;
-color: #D8E4F0;
-font-family: ‘DM Mono’, ‘Courier New’, monospace;
+html, body {
+background: #0A0A0F !important;
+color: #FFFFFF;
+font-family: ‘Inter’, -apple-system, BlinkMacSystemFont, sans-serif;
 min-height: 100vh;
 min-height: -webkit-fill-available;
-width: 100%;
 overflow-x: hidden;
-position: relative;
 -webkit-font-smoothing: antialiased;
 }
 
-/* Force dark on all elements */
-input, button, div, span, p {
-background-color: transparent;
-color: inherit;
+/* Ticker bar like PyPredict */
+.ticker {
+background: #111118;
+border-bottom: 1px solid rgba(255,255,255,0.08);
+padding: 10px 16px;
+display: flex;
+gap: 20px;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
 }
+.ticker::-webkit-scrollbar { display: none; }
 
-/* Grid bg */
-.grid-bg {
-position: fixed;
-inset: 0;
-background-image:
-linear-gradient(rgba(45,133,255,0.05) 1px, transparent 1px),
-linear-gradient(90deg, rgba(45,133,255,0.05) 1px, transparent 1px);
-background-size: 40px 40px;
-pointer-events: none;
-z-index: 0;
-}
-
-/* Glow orbs */
-.orb {
-position: fixed;
-border-radius: 50%;
-filter: blur(80px);
-pointer-events: none;
-z-index: 0;
-}
-.orb1 {
-width: 400px; height: 400px;
-background: rgba(45,133,255,0.1);
-top: -100px; left: -100px;
-}
-.orb2 {
-width: 350px; height: 350px;
-background: rgba(0,240,128,0.07);
-bottom: -80px; right: -80px;
-}
-
-.page {
-position: relative;
-z-index: 1;
-max-width: 480px;
-margin: 0 auto;
-padding: 28px 14px 64px;
-}
-
-/* ── HEADER ── */
-.pill {
-display: inline-flex;
+.tick-item {
+display: flex;
 align-items: center;
-gap: 7px;
-background: rgba(0,240,128,0.1);
-border: 1px solid rgba(0,240,128,0.25);
-color: #00F080;
-font-size: 9px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-padding: 5px 14px;
-border-radius: 100px;
-margin-bottom: 18px;
+gap: 6px;
+flex-shrink: 0;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: 0.02em;
 }
 
-.pill-dot {
+.tick-label { color: #6B7280; }
+.tick-val { color: #fff; }
+.tick-change { font-size: 11px; }
+.tick-change.up { color: #00E87A; }
+.tick-change.dn { color: #FF3D3D; }
+
+/* Nav */
+.nav {
+background: #0A0A0F;
+padding: 14px 16px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid rgba(255,255,255,0.06);
+position: sticky;
+top: 0;
+z-index: 50;
+}
+
+.nav-brand {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.nav-logo {
+width: 36px; height: 36px;
+background: linear-gradient(135deg, #2D85FF, #00C3FF);
+border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+font-weight: 900;
+color: #fff;
+font-family: ‘Bebas Neue’, sans-serif;
+letter-spacing: 0.02em;
+}
+
+.nav-name {
+font-size: 18px;
+font-weight: 800;
+color: #fff;
+letter-spacing: -0.02em;
+}
+
+.nav-badge {
+background: rgba(0,232,122,0.12);
+border: 1px solid rgba(0,232,122,0.3);
+color: #00E87A;
+font-size: 10px;
+font-weight: 600;
+padding: 4px 10px;
+border-radius: 100px;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.nav-dot {
 width: 5px; height: 5px;
 border-radius: 50%;
-background: #00F080;
-box-shadow: 0 0 6px #00F080;
+background: #00E87A;
+box-shadow: 0 0 6px #00E87A;
 animation: blink 2s ease infinite;
-flex-shrink: 0;
 }
 
 @keyframes blink {
-0%,100%{opacity:1;transform:scale(1);}
-50%{opacity:0.3;transform:scale(0.7);}
+0%,100%{opacity:1;} 50%{opacity:0.3;}
 }
 
-.h1 {
-font-family: ‘Bebas Neue’, ‘Arial Black’, sans-serif;
-font-size: 46px;
-line-height: 0.95;
-letter-spacing: 0.03em;
-color: #FFFFFF;
-margin-bottom: 12px;
+/* Page */
+.page {
+padding: 0 0 80px;
+max-width: 480px;
+margin: 0 auto;
 }
 
-.h1-gold {
-background: linear-gradient(135deg, #F5A623 0%, #FFD166 50%, #F5A623 100%);
+/* Section header */
+.sec-head {
+padding: 20px 16px 10px;
+}
+
+.sec-title {
+font-size: 22px;
+font-weight: 800;
+color: #fff;
+letter-spacing: -0.03em;
+margin-bottom: 4px;
+}
+
+.sec-title span {
+background: linear-gradient(135deg, #F5A623, #FFD166);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
 }
 
-.h-sub {
-font-size: 11px;
-color: #3A4B62;
-line-height: 1.7;
-letter-spacing: 0.04em;
-margin-bottom: 24px;
+.sec-sub {
+font-size: 13px;
+color: #6B7280;
+line-height: 1.5;
 }
 
-/* ── CARD ── */
+/* Card */
 .card {
-background: #0A0D14;
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 14px;
+background: #111118;
+border-radius: 16px;
+margin: 0 16px 12px;
 overflow: hidden;
-margin-bottom: 10px;
+border: 1px solid rgba(255,255,255,0.07);
 }
 
-.card-top {
-background: #0F1520;
-padding: 14px 18px;
+.card-header {
+padding: 14px 16px;
 border-bottom: 1px solid rgba(255,255,255,0.06);
 display: flex;
 align-items: center;
-gap: 8px;
+justify-content: space-between;
 }
 
-.card-icon {
-width: 26px; height: 26px;
-border-radius: 6px;
-background: rgba(45,133,255,0.15);
-display: flex; align-items: center; justify-content: center;
-font-size: 13px;
-color: #2D85FF;
-flex-shrink: 0;
-}
-
-.card-title {
-font-size: 9px;
-letter-spacing: 0.2em;
+.card-label {
+font-size: 12px;
+font-weight: 600;
+color: #6B7280;
+letter-spacing: 0.05em;
 text-transform: uppercase;
-color: #3A4B62;
 }
 
-.card-body { padding: 18px; }
+.card-body { padding: 16px; }
 
-/* ── FIELD ── */
-.field { margin-bottom: 18px; }
+/* Input */
+.field { margin-bottom: 16px; }
 .field:last-child { margin-bottom: 0; }
 
 .flabel {
-font-size: 9px;
-letter-spacing: 0.18em;
+font-size: 11px;
+font-weight: 600;
+color: #6B7280;
+letter-spacing: 0.08em;
 text-transform: uppercase;
-color: #3A4B62;
 margin-bottom: 8px;
 }
 
-/* Amount */
-.amount-row {
-background: #131A24;
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 10px;
+.input-row {
+background: #1A1A24;
+border: 1.5px solid rgba(255,255,255,0.08);
+border-radius: 12px;
 display: flex;
 align-items: center;
 padding: 0 16px;
-height: 66px;
+height: 62px;
 transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.amount-row:focus-within {
-border-color: rgba(45,133,255,0.5);
-box-shadow: 0 0 0 3px rgba(45,133,255,0.1);
+.input-row:focus-within {
+border-color: #2D85FF;
+box-shadow: 0 0 0 3px rgba(45,133,255,0.15);
 }
 
-.apfx {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 26px;
-color: #3A4B62;
+.ipfx {
+font-size: 22px;
+font-weight: 700;
+color: #6B7280;
 margin-right: 6px;
-flex-shrink: 0;
-}
-
-.asfx {
-font-size: 10px;
-letter-spacing: 0.15em;
-color: #3A4B62;
-margin-left: auto;
 flex-shrink: 0;
 }
 
@@ -218,24 +221,34 @@ input[type=“number”] {
 background: transparent !important;
 border: none !important;
 outline: none !important;
-font-family: ‘Bebas Neue’, ‘Arial Black’, sans-serif;
-font-size: 38px;
+font-size: 28px;
+font-weight: 800;
 color: #FFFFFF !important;
-letter-spacing: 0.02em;
+letter-spacing: -0.02em;
 width: 100%;
 -moz-appearance: textfield;
 -webkit-appearance: none;
+font-family: ‘Inter’, sans-serif;
 }
 
 input[type=“number”]::-webkit-inner-spin-button,
 input[type=“number”]::-webkit-outer-spin-button { display: none; }
 
+.isfx {
+font-size: 12px;
+font-weight: 600;
+color: #6B7280;
+margin-left: 8px;
+flex-shrink: 0;
+letter-spacing: 0.05em;
+}
+
 /* Slider */
 .slider-disp {
-background: #131A24;
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 10px;
-padding: 14px 18px;
+background: #1A1A24;
+border: 1.5px solid rgba(255,255,255,0.08);
+border-radius: 12px;
+padding: 14px 16px;
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -243,16 +256,17 @@ margin-bottom: 10px;
 }
 
 .sval {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 38px;
+font-size: 28px;
+font-weight: 800;
 color: #fff;
-line-height: 1;
+letter-spacing: -0.02em;
 }
 
 .sunit {
-font-size: 10px;
-letter-spacing: 0.15em;
-color: #3A4B62;
+font-size: 12px;
+font-weight: 600;
+color: #6B7280;
+letter-spacing: 0.05em;
 }
 
 input[type=“range”] {
@@ -260,7 +274,7 @@ input[type=“range”] {
 appearance: none;
 width: 100%;
 height: 4px;
-background: #1E2A3A;
+background: #1A1A24;
 border-radius: 2px;
 outline: none;
 cursor: pointer;
@@ -269,9 +283,9 @@ margin-bottom: 10px;
 
 input[type=“range”]::-webkit-slider-thumb {
 -webkit-appearance: none;
-width: 26px; height: 26px;
+width: 24px; height: 24px;
 border-radius: 50%;
-background: linear-gradient(135deg, #5AABFF, #2D85FF);
+background: #2D85FF;
 cursor: pointer;
 box-shadow: 0 0 0 4px rgba(45,133,255,0.2), 0 0 16px rgba(45,133,255,0.5);
 }
@@ -284,21 +298,21 @@ gap: 6px;
 }
 
 .dpill {
-background: #131A24;
-border: 1px solid rgba(255,255,255,0.08);
-border-radius: 8px;
-padding: 8px 4px;
+background: #1A1A24;
+border: 1.5px solid rgba(255,255,255,0.07);
+border-radius: 10px;
+padding: 9px 4px;
 text-align: center;
-font-size: 11px;
-color: #3A4B62;
+font-size: 12px;
+font-weight: 600;
+color: #6B7280;
 cursor: pointer;
 transition: all 0.15s;
-font-family: ‘DM Mono’, monospace;
 }
 
 .dpill.on {
 background: rgba(45,133,255,0.12);
-border-color: rgba(45,133,255,0.4);
+border-color: #2D85FF;
 color: #2D85FF;
 }
 
@@ -310,272 +324,293 @@ gap: 8px;
 }
 
 .apybtn {
-background: #131A24;
-border: 1px solid rgba(255,255,255,0.08);
-border-radius: 10px;
-padding: 13px 6px;
+background: #1A1A24;
+border: 1.5px solid rgba(255,255,255,0.07);
+border-radius: 12px;
+padding: 12px 6px;
 text-align: center;
 cursor: pointer;
 transition: all 0.18s;
 }
 
 .apypct {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 26px;
-color: #3A4B62;
+font-size: 20px;
+font-weight: 800;
+color: #6B7280;
 display: block;
 line-height: 1;
 margin-bottom: 3px;
-letter-spacing: 0.02em;
+letter-spacing: -0.02em;
 }
 
 .apylbl {
-font-size: 8px;
-color: #3A4B62;
-letter-spacing: 0.12em;
+font-size: 9px;
+font-weight: 600;
+color: #6B7280;
+letter-spacing: 0.08em;
 text-transform: uppercase;
 display: block;
 }
 
-.apybtn.on0 { background:rgba(0,240,128,0.08); border-color:rgba(0,240,128,0.3); }
-.apybtn.on0 .apypct { color:#00F080; }
-.apybtn.on0 .apylbl { color:rgba(0,240,128,0.6); }
+.apybtn.on0 { background:rgba(0,232,122,0.1); border-color:#00E87A; }
+.apybtn.on0 .apypct { color:#00E87A; }
+.apybtn.on0 .apylbl { color:rgba(0,232,122,0.7); }
 
-.apybtn.on1 { background:rgba(45,133,255,0.1); border-color:rgba(45,133,255,0.4); }
+.apybtn.on1 { background:rgba(45,133,255,0.1); border-color:#2D85FF; }
 .apybtn.on1 .apypct { color:#2D85FF; }
-.apybtn.on1 .apylbl { color:rgba(45,133,255,0.6); }
+.apybtn.on1 .apylbl { color:rgba(45,133,255,0.7); }
 
-.apybtn.on2 { background:rgba(245,166,35,0.1); border-color:rgba(245,166,35,0.35); }
+.apybtn.on2 { background:rgba(245,166,35,0.1); border-color:#F5A623; }
 .apybtn.on2 .apypct { color:#F5A623; }
-.apybtn.on2 .apylbl { color:rgba(245,166,35,0.6); }
+.apybtn.on2 .apylbl { color:rgba(245,166,35,0.7); }
 
-.apybtn.on3 { background:rgba(255,61,61,0.08); border-color:rgba(255,61,61,0.3); }
+.apybtn.on3 { background:rgba(255,61,61,0.1); border-color:#FF3D3D; }
 .apybtn.on3 .apypct { color:#FF3D3D; }
-.apybtn.on3 .apylbl { color:rgba(255,61,61,0.6); }
+.apybtn.on3 .apylbl { color:rgba(255,61,61,0.7); }
 
-/* ── COMPARE ── */
-.cmprow {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 10px;
-margin-bottom: 10px;
-}
-
+/* ── BIG RESULT CARDS ── like PyPredict market cards */
 .rcard {
-background: #0A0D14;
-border-radius: 14px;
-padding: 20px 16px;
+background: #111118;
+border-radius: 16px;
+margin: 0 16px 10px;
+padding: 18px 16px;
+border: 1px solid rgba(255,255,255,0.07);
 position: relative;
 overflow: hidden;
-min-height: 170px;
 }
 
-.rcard.dead {
-border: 1px solid rgba(255,61,61,0.2);
-background: #0A0D14;
-}
+.rcard.dead { border-top: 3px solid #FF3D3D; }
+.rcard.live { border-top: 3px solid #00E87A; }
 
-.rcard.dead::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(255,61,61,0.07), transparent 60%);
-pointer-events: none;
-}
-
-.rcard.live {
-border: 1px solid rgba(0,240,128,0.25);
-background: #0A0D14;
-}
-
-.rcard.live::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(0,240,128,0.08), transparent 60%);
-pointer-events: none;
-}
-
-.rcard.live::after {
-content: ‘’;
-position: absolute;
-bottom: -30px; right: -30px;
-width: 120px; height: 120px;
-background: radial-gradient(circle, rgba(0,240,128,0.15), transparent 70%);
-pointer-events: none;
-}
-
-.rtag {
-font-size: 8px;
-letter-spacing: 0.18em;
-text-transform: uppercase;
-margin-bottom: 10px;
+.rcard-top {
 display: flex;
 align-items: center;
-gap: 5px;
-position: relative;
+justify-content: space-between;
+margin-bottom: 14px;
 }
 
-.rcard.dead .rtag { color: #FF3D3D; }
-.rcard.live .rtag { color: #00F080; }
-
-.rlbl {
-font-size: 9px;
-color: #3A4B62;
-margin-bottom: 6px;
-letter-spacing: 0.06em;
-position: relative;
+.rcard-platform {
+display: flex;
+align-items: center;
+gap: 8px;
 }
 
-.rnum {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 44px;
+.rcard-icon {
+width: 32px; height: 32px;
+border-radius: 8px;
+display: flex; align-items: center; justify-content: center;
+font-size: 16px;
+}
+
+.rcard.dead .rcard-icon { background: rgba(255,61,61,0.12); }
+.rcard.live .rcard-icon { background: rgba(0,232,122,0.1); }
+
+.rcard-name {
+font-size: 14px;
+font-weight: 700;
+color: #fff;
+}
+
+.rcard-sub {
+font-size: 11px;
+color: #6B7280;
+}
+
+.ryield-label {
+font-size: 11px;
+font-weight: 600;
+color: #6B7280;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+
+/* Big yield number */
+.ryield {
+font-size: 52px;
+font-weight: 800;
+letter-spacing: -0.03em;
 line-height: 1;
-letter-spacing: 0.02em;
-margin-bottom: 8px;
+margin: 8px 0 12px;
 transition: all 0.3s ease;
-position: relative;
 }
 
-.rcard.dead .rnum { color: #FF3D3D; }
+.rcard.dead .ryield { color: #FF3D3D; }
+.rcard.live .ryield { color: #00E87A; }
 
-.rcard.live .rnum {
-background: linear-gradient(135deg, #00F080 0%, #00D4FF 100%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
+/* Progress bar like PyPredict YES/NO */
+.prog-wrap { margin-bottom: 14px; }
+
+.prog-labels {
+display: flex;
+justify-content: space-between;
+margin-bottom: 6px;
 }
 
-.rdesc {
-font-size: 9px;
-line-height: 1.5;
-letter-spacing: 0.04em;
-position: relative;
+.prog-yes {
+font-size: 12px;
+font-weight: 700;
+color: #00E87A;
 }
 
-.rcard.dead .rdesc { color: rgba(255,61,61,0.45); }
-.rcard.live .rdesc { color: rgba(0,240,128,0.45); }
+.prog-no {
+font-size: 12px;
+font-weight: 700;
+color: #FF3D3D;
+}
 
-/* ── VERDICT ── */
-.vcard {
-background: #0A0D14;
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 14px;
-padding: 18px;
-margin-bottom: 10px;
-position: relative;
+.prog-track {
+height: 8px;
+border-radius: 4px;
+background: #FF3D3D;
 overflow: hidden;
 }
 
-.vcard::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 0; right: 0;
-height: 2px;
-background: linear-gradient(90deg, #F5A623, rgba(245,166,35,0.3), transparent);
+.prog-fill {
+height: 100%;
+border-radius: 4px;
+background: #00E87A;
+transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.vtag {
-font-size: 8px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: #F5A623;
-margin-bottom: 10px;
-}
-
-.vbody {
-font-size: 12px;
-line-height: 1.8;
-color: #4A5E78;
-letter-spacing: 0.03em;
-}
-
-.vbody strong { color: #F5A623; }
-.vbody .g {
-color: #00F080;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 16px;
-}
-.vbody .r { color: #FF3D3D; }
-
-/* ── BENTO ── */
-.bento {
+/* Buy buttons like PyPredict */
+.btn-row {
 display: grid;
 grid-template-columns: 1fr 1fr;
-gap: 10px;
-margin-bottom: 10px;
+gap: 8px;
+}
+
+.btn {
+padding: 14px;
+border-radius: 12px;
+text-align: center;
+font-weight: 700;
+font-size: 14px;
+border: none;
+cursor: pointer;
+letter-spacing: 0.02em;
+}
+
+.btn-green {
+background: #00E87A;
+color: #000;
+}
+
+.btn-red {
+background: #FF3D3D;
+color: #fff;
+}
+
+.btn-sub {
+font-size: 11px;
+font-weight: 500;
+opacity: 0.8;
+display: block;
+margin-top: 2px;
+}
+
+/* Stats bento */
+.bento {
+margin: 0 16px 10px;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
 }
 
 .bcard {
-background: #0A0D14;
-border: 1px solid rgba(255,255,255,0.09);
+background: #111118;
+border: 1px solid rgba(255,255,255,0.07);
 border-radius: 14px;
-padding: 18px 16px;
-position: relative;
-overflow: hidden;
+padding: 14px;
 }
 
 .bcard.wide { grid-column: span 2; }
 
 .blbl {
-font-size: 9px;
-letter-spacing: 0.15em;
+font-size: 11px;
+font-weight: 600;
+color: #6B7280;
 text-transform: uppercase;
-color: #3A4B62;
-margin-bottom: 8px;
+letter-spacing: 0.06em;
+margin-bottom: 6px;
 }
 
 .bnum {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 34px;
+font-size: 28px;
+font-weight: 800;
+letter-spacing: -0.02em;
 line-height: 1;
-margin-bottom: 4px;
 transition: all 0.3s;
-letter-spacing: 0.02em;
 }
 
-.bsub { font-size: 9px; color: #3A4B62; }
+.bsub { font-size: 11px; color: #6B7280; margin-top: 3px; }
 
-/* Progress */
-.ptrack {
+/* Progress inside bento */
+.bp-track {
 height: 6px;
-background: #131A24;
+background: #1A1A24;
 border-radius: 3px;
 overflow: hidden;
-margin: 12px 0 8px;
+margin: 10px 0 6px;
 }
 
-.pfill {
+.bp-fill {
 height: 100%;
+background: linear-gradient(90deg, #00E87A, #00D4FF);
 border-radius: 3px;
-background: linear-gradient(90deg, #00F080, #00D4FF);
-box-shadow: 0 0 10px rgba(0,240,128,0.6);
+box-shadow: 0 0 8px rgba(0,232,122,0.5);
 transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.plabels {
+.bp-labels {
 display: flex;
 justify-content: space-between;
-font-size: 8px;
-color: #3A4B62;
-letter-spacing: 0.1em;
+font-size: 10px;
+color: #6B7280;
 }
 
-/* ── BREAKDOWN ── */
+/* Verdict */
+.vcard {
+background: #111118;
+border-radius: 16px;
+margin: 0 16px 10px;
+padding: 16px;
+border: 1px solid rgba(255,255,255,0.07);
+border-left: 3px solid #F5A623;
+}
+
+.vtag {
+font-size: 11px;
+font-weight: 700;
+color: #F5A623;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+margin-bottom: 8px;
+}
+
+.vbody {
+font-size: 13px;
+line-height: 1.7;
+color: #9CA3AF;
+}
+
+.vbody strong { color: #F5A623; font-weight: 700; }
+.vbody .g { color: #00E87A; font-weight: 700; }
+.vbody .r { color: #FF3D3D; font-weight: 700; }
+
+/* Breakdown */
 .bkcard {
-background: #0A0D14;
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 14px;
+background: #111118;
+border-radius: 16px;
+margin: 0 16px 10px;
 overflow: hidden;
-margin-bottom: 10px;
+border: 1px solid rgba(255,255,255,0.07);
 }
 
 .bkhead {
-background: #0F1520;
-padding: 12px 18px;
+background: #1A1A24;
+padding: 12px 16px;
 display: flex;
 justify-content: space-between;
-align-items: center;
 border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
@@ -583,130 +618,158 @@ border-bottom: 1px solid rgba(255,255,255,0.06);
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 13px 18px;
+padding: 12px 16px;
 border-bottom: 1px solid rgba(255,255,255,0.04);
 transition: background 0.15s;
 }
 
 .bkrow:last-child { border-bottom: none; }
-.bkrow:hover { background: rgba(255,255,255,0.02); }
 
-.bk { font-size: 11px; color: #3A4B62; }
+.bk { font-size: 13px; color: #9CA3AF; }
 
 .bv {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 16px;
-letter-spacing: 0.04em;
+font-size: 14px;
+font-weight: 700;
 transition: all 0.3s;
 }
 
-/* ── FOOTER ── */
+/* Bottom nav like PyPredict */
+.bottom-nav {
+position: fixed;
+bottom: 0; left: 0; right: 0;
+background: #111118;
+border-top: 1px solid rgba(255,255,255,0.08);
+display: flex;
+padding: 10px 0 20px;
+z-index: 50;
+max-width: 480px;
+margin: 0 auto;
+}
+
+.bnav-item {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+cursor: pointer;
+}
+
+.bnav-icon { font-size: 20px; }
+
+.bnav-label {
+font-size: 9px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: #6B7280;
+}
+
+.bnav-item.active .bnav-label { color: #2D85FF; }
+
+/* Footer card */
 .fcard {
-background: #0A0D14;
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 14px;
-padding: 16px 18px;
+background: #111118;
+border: 1px solid rgba(255,255,255,0.07);
+border-radius: 16px;
+margin: 0 16px 10px;
+padding: 14px 16px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-flex-wrap: wrap;
-gap: 10px;
 }
 
 .fbrand {
-font-family: ‘Bebas Neue’, sans-serif;
 font-size: 18px;
-letter-spacing: 0.08em;
-color: #3A4B62;
+font-weight: 800;
+color: #fff;
+letter-spacing: -0.02em;
 }
 
-.fbrand span {
-background: linear-gradient(90deg, #5AABFF, #2D85FF);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
+.fbrand span { color: #2D85FF; }
 
 .flinks { display: flex; gap: 8px; }
 
 .flink {
-font-size: 9px;
-color: #3A4B62;
-background: #131A24;
+font-size: 11px;
+font-weight: 600;
+color: #9CA3AF;
+background: #1A1A24;
 border: 1px solid rgba(255,255,255,0.08);
 padding: 6px 12px;
 border-radius: 100px;
 text-decoration: none;
-letter-spacing: 0.08em;
 transition: all 0.15s;
 }
 
-.flink:hover { color: #2D85FF; border-color: rgba(45,133,255,0.35); }
+.flink:hover { color: #2D85FF; }
 
 .disc {
 text-align: center;
-font-size: 9px;
-color: #1E2A3A;
-margin-top: 20px;
-line-height: 1.7;
-letter-spacing: 0.04em;
+font-size: 10px;
+color: #374151;
+padding: 0 16px 10px;
+line-height: 1.6;
 }
 
 /* Flash */
 @keyframes flash {
-0%{opacity:0.3;transform:scale(0.97);}
+0%{opacity:0.4;transform:scale(0.97);}
 100%{opacity:1;transform:scale(1);}
 }
-.fl { animation: flash 0.25s ease; }
-
-/* Fade up */
-@keyframes up {
-from{opacity:0;transform:translateY(16px);}
-to{opacity:1;transform:translateY(0);}
-}
-
-.header { animation: up 0.5s ease both; }
-.card { animation: up 0.5s ease 0.05s both; }
-.cmprow { animation: up 0.5s ease 0.1s both; }
-.vcard { animation: up 0.5s ease 0.15s both; }
-.bento { animation: up 0.5s ease 0.2s both; }
-.bkcard { animation: up 0.5s ease 0.25s both; }
-.fcard { animation: up 0.5s ease 0.3s both; }
+.fl { animation: flash 0.2s ease; }
 </style>
 
 </head>
 <body>
 
-<div class="grid-bg"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
+<!-- Ticker -->
+
+<div class="ticker">
+  <div class="tick-item"><span class="tick-label">POTS</span><span class="tick-val">$0.00</span><span class="tick-change up">▲LIVE</span></div>
+  <div class="tick-item"><span class="tick-label">BTC</span><span class="tick-val">$84,230</span><span class="tick-change up">▲0.42%</span></div>
+  <div class="tick-item"><span class="tick-label">ETH</span><span class="tick-val">$1,588</span><span class="tick-change dn">▼0.18%</span></div>
+  <div class="tick-item"><span class="tick-label">BNB</span><span class="tick-val">$583</span><span class="tick-change up">▲0.31%</span></div>
+  <div class="tick-item"><span class="tick-label">POLY</span><span class="tick-val">$8B/mo</span><span class="tick-change up">▲VOL</span></div>
+</div>
+
+<!-- Nav -->
+
+<div class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">P</div>
+    <span class="nav-name">POTS Calc</span>
+  </div>
+  <div class="nav-badge">
+    <div class="nav-dot"></div>
+    Live
+  </div>
+</div>
 
 <div class="page">
 
   <!-- Header -->
 
-  <div class="header">
-    <div class="pill"><div class="pill-dot"></div>Live Calculator</div>
-    <div class="h1">How much are<br>you leaving on<br><span class="h1-gold">the table?</span></div>
-    <p class="h-sub">Enter your position and resolution window to see exactly what your idle collateral costs you — and what POTS Money earns back.</p>
+  <div class="sec-head">
+    <div class="sec-title">How much are you leaving<br>on <span>the table?</span></div>
+    <div class="sec-sub">Calculate your idle collateral cost vs POTS Money yield</div>
   </div>
 
   <!-- Input Card -->
 
   <div class="card">
-    <div class="card-top">
-      <div class="card-icon">◈</div>
-      <span class="card-title">Position Details</span>
+    <div class="card-header">
+      <span class="card-label">Position Details</span>
     </div>
     <div class="card-body">
 
 ```
   <div class="field">
     <div class="flabel">Collateral Amount</div>
-    <div class="amount-row">
-      <span class="apfx">$</span>
+    <div class="input-row">
+      <span class="ipfx">$</span>
       <input type="number" id="amount" value="5000" min="1" max="10000000" inputmode="numeric"/>
-      <span class="asfx">USDC</span>
+      <span class="isfx">USDC</span>
     </div>
   </div>
 
@@ -741,20 +804,61 @@ to{opacity:1;transform:translateY(0);}
 
   </div>
 
-  <!-- Compare -->
+  <!-- Polymarket Card -->
 
-  <div class="cmprow">
-    <div class="rcard dead">
-      <div class="rtag">❌ Polymarket</div>
-      <div class="rlbl">Yield on collateral</div>
-      <div class="rnum" id="polyYield">$0.00</div>
-      <div class="rdesc" id="polySub">Capital locked.<br>Earning nothing.</div>
+  <div class="rcard dead">
+    <div class="rcard-top">
+      <div class="rcard-platform">
+        <div class="rcard-icon">❌</div>
+        <div>
+          <div class="rcard-name">Polymarket / Others</div>
+          <div class="rcard-sub">No yield layer</div>
+        </div>
+      </div>
     </div>
-    <div class="rcard live">
-      <div class="rtag">✅ POTS Money</div>
-      <div class="rlbl">Yield on collateral</div>
-      <div class="rnum" id="potsYield">$15.34</div>
-      <div class="rdesc" id="potsSub">Capital working<br>while you wait.</div>
+    <div class="ryield-label">Yield on your collateral</div>
+    <div class="ryield" id="polyYield">$0.00</div>
+    <div class="prog-wrap">
+      <div class="prog-labels">
+        <span class="prog-yes">YIELD 0%</span>
+        <span class="prog-no">IDLE 100%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <div class="btn btn-red">LOCKED<span class="btn-sub" id="polySub">$5,000 for 14 days</span></div>
+      <div class="btn" style="background:#1A1A24;color:#6B7280;">EARNING<span class="btn-sub">$0.00</span></div>
+    </div>
+  </div>
+
+  <!-- POTS Card -->
+
+  <div class="rcard live">
+    <div class="rcard-top">
+      <div class="rcard-platform">
+        <div class="rcard-icon">✅</div>
+        <div>
+          <div class="rcard-name">POTS Money</div>
+          <div class="rcard-sub">DeFi yield layer active</div>
+        </div>
+      </div>
+    </div>
+    <div class="ryield-label">Yield on your collateral</div>
+    <div class="ryield" id="potsYield">$15.34</div>
+    <div class="prog-wrap">
+      <div class="prog-labels">
+        <span class="prog-yes" id="progYesLabel">YIELD 100%</span>
+        <span class="prog-no">IDLE 0%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill" style="width:100%"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <div class="btn btn-green">EARNING<span class="btn-sub" id="potsSub">$15.34 at 8% APY</span></div>
+      <div class="btn" style="background:#1A1A24;color:#6B7280;">IDLE<span class="btn-sub">$0.00</span></div>
     </div>
   </div>
 
@@ -765,27 +869,27 @@ to{opacity:1;transform:translateY(0);}
     <div class="vbody" id="vText">Loading...</div>
   </div>
 
-  <!-- Bento -->
+  <!-- Bento Stats -->
 
   <div class="bento">
     <div class="bcard">
       <div class="blbl">Daily Yield</div>
-      <div class="bnum" id="statD" style="color:#00F080">$0.00</div>
+      <div class="bnum" id="statD" style="color:#00E87A">$1.10</div>
       <div class="bsub">on POTS Money</div>
     </div>
     <div class="bcard">
-      <div class="blbl">Annual Projected</div>
-      <div class="bnum" id="statA" style="color:#2D85FF">$0</div>
-      <div class="bsub">at selected APY</div>
+      <div class="blbl">Annual</div>
+      <div class="bnum" id="statA" style="color:#2D85FF">$400</div>
+      <div class="bsub">projected yield</div>
     </div>
     <div class="bcard wide">
-      <div class="blbl">Capital Utilisation</div>
-      <div class="ptrack">
-        <div class="pfill" id="pfill" style="width:0%"></div>
+      <div class="blbl">Capital Utilisation — Polymarket vs POTS</div>
+      <div class="bp-track">
+        <div class="bp-fill" id="bpFill" style="width:0%"></div>
       </div>
-      <div class="plabels">
+      <div class="bp-labels">
         <span>Polymarket: 0% (idle)</span>
-        <span id="pLabel">POTS: 8% APY active</span>
+        <span id="bpLabel">POTS: 8% APY active</span>
       </div>
     </div>
   </div>
@@ -794,15 +898,15 @@ to{opacity:1;transform:translateY(0);}
 
   <div class="bkcard">
     <div class="bkhead">
-      <span style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#3A4B62;">Calculation Breakdown</span>
-      <span style="font-size:9px;color:#2D85FF;letter-spacing:0.1em;">// details</span>
+      <span style="font-size:12px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;">Breakdown</span>
+      <span style="font-size:12px;color:#2D85FF;font-weight:600;">Details</span>
     </div>
     <div class="bkrow"><span class="bk">Position Size</span><span class="bv" id="bAmt" style="color:#fff">$5,000</span></div>
     <div class="bkrow"><span class="bk">Resolution Window</span><span class="bv" id="bDays" style="color:#fff">14 days</span></div>
     <div class="bkrow"><span class="bk">APY Selected</span><span class="bv" id="bApy" style="color:#2D85FF">8%</span></div>
     <div class="bkrow"><span class="bk">Daily Rate</span><span class="bv" id="bRate" style="color:#2D85FF">0.0219%</span></div>
     <div class="bkrow"><span class="bk">Polymarket Yield</span><span class="bv" style="color:#FF3D3D">$0.00</span></div>
-    <div class="bkrow"><span class="bk">POTS Money Yield</span><span class="bv" id="bPots" style="color:#00F080">$0.00</span></div>
+    <div class="bkrow"><span class="bk">POTS Money Yield</span><span class="bv" id="bPots" style="color:#00E87A">$0.00</span></div>
     <div class="bkrow"><span class="bk">Left on the Table</span><span class="bv" id="bLost" style="color:#FF3D3D">$0.00</span></div>
   </div>
 
@@ -816,12 +920,33 @@ to{opacity:1;transform:translateY(0);}
     </div>
   </div>
 
-  <p class="disc">APY figures are illustrative estimates for educational purposes only.<br>Not financial advice. DYOR. Built by a POTS community member.</p>
+  <div class="disc">APY figures are illustrative estimates for educational purposes only. Not financial advice. DYOR. Built by a POTS community member.</div>
 
 </div>
 
+<!-- Bottom Nav -->
+
+<div class="bottom-nav">
+  <div class="bnav-item active">
+    <div class="bnav-icon">🧮</div>
+    <span class="bnav-label">Calculator</span>
+  </div>
+  <div class="bnav-item">
+    <div class="bnav-icon">📊</div>
+    <span class="bnav-label">Markets</span>
+  </div>
+  <div class="bnav-item">
+    <div class="bnav-icon">💰</div>
+    <span class="bnav-label">Yield</span>
+  </div>
+  <div class="bnav-item">
+    <div class="bnav-icon">🔗</div>
+    <span class="bnav-label">POTS</span>
+  </div>
+</div>
+
 <script>
-var apy=8, apyIdx=1;
+var apy=8;
 
 function fmt(n,d){
   d=d!==undefined?d:2;
@@ -848,25 +973,29 @@ function calc(){
   var ptEl=document.getElementById('potsYield');
   pyEl.textContent='$0.00';
   ptEl.textContent=fmt(py);
-  fl(pyEl);fl(ptEl);
+  fl(pyEl); fl(ptEl);
 
-  document.getElementById('polySub').textContent=fmt(am,0)+' locked '+dy+'d. $0 earned.';
-  document.getElementById('potsSub').textContent=fmt(py)+' at '+apy+'% APY.';
+  document.getElementById('polySub').textContent=fmt(am,0)+' for '+dy+'d';
+  document.getElementById('potsSub').textContent=fmt(py)+' at '+apy+'% APY';
+  document.getElementById('progYesLabel').textContent='YIELD '+apy+'% APY';
+
+  // Progress — show utilisation
+  var pct=am>0?Math.min(apy*4,100):0;
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('bpFill').style.width=pct+'%';
+  document.getElementById('bpLabel').textContent='POTS: '+apy+'% APY';
 
   var sdEl=document.getElementById('statD');
   var saEl=document.getElementById('statA');
   sdEl.textContent=fmt(dly);
   saEl.textContent=fmt(ann,0);
-  fl(sdEl);fl(saEl);
-
-  document.getElementById('pfill').style.width=(am>0?Math.min(apy*3,100):0)+'%';
-  document.getElementById('pLabel').textContent='POTS: '+apy+'% APY active';
+  fl(sdEl); fl(saEl);
 
   var vEl=document.getElementById('vText');
   if(!am){
-    vEl.innerHTML='Enter a position size above to see your calculation.';
+    vEl.innerHTML='Enter a position size above.';
   } else {
-    vEl.innerHTML='You locked <strong>'+fmt(am,0)+'</strong> for <strong>'+dy+' day'+(dy!==1?'s':'')+'</strong>. On Polymarket that earned <span class="r">$0.00</span>. On POTS Money at '+apy+'% APY it earns <span class="g">'+fmt(py)+'</span>. That\'s <strong>'+fmt(py)+'</strong> left on the table — every single time.';
+    vEl.innerHTML='You locked <strong>'+fmt(am,0)+'</strong> for <strong>'+dy+' day'+(dy!==1?'s':'')+'</strong>. Polymarket earned <span class="r">$0.00</span>. POTS Money at '+apy+'% APY earns <span class="g">'+fmt(py)+'</span>. That\'s <strong>'+fmt(py)+'</strong> left on the table — every single time you use a platform without a yield layer.';
   }
 
   document.getElementById('bAmt').textContent=fmt(am,0);
@@ -877,7 +1006,7 @@ function calc(){
   var blEl=document.getElementById('bLost');
   bpEl.textContent=fmt(py);
   blEl.textContent=fmt(py);
-  fl(bpEl);fl(blEl);
+  fl(bpEl); fl(blEl);
 }
 
 document.getElementById('amount').addEventListener('input',calc);
@@ -904,12 +1033,9 @@ document.querySelectorAll('.dpill').forEach(function(p){
 document.querySelectorAll('.apybtn').forEach(function(b){
   b.addEventListener('click',function(){
     var i=parseInt(this.dataset.i);
-    document.querySelectorAll('.apybtn').forEach(function(x){
-      x.className='apybtn';
-    });
+    document.querySelectorAll('.apybtn').forEach(function(x){x.className='apybtn';});
     this.classList.add('on'+i);
     apy=parseInt(this.dataset.apy);
-    apyIdx=i;
     calc();
   });
 });
