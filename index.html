@@ -122,7 +122,7 @@ animation: blink 2s ease infinite;
 
 /* Page */
 .page {
-padding: 0 0 80px;
+padding: 0 0 40px;
 max-width: 480px;
 margin: 0 auto;
 }
@@ -633,39 +633,21 @@ font-weight: 700;
 transition: all 0.3s;
 }
 
-/* Bottom nav like PyPredict */
-.bottom-nav {
-position: fixed;
-bottom: 0; left: 0; right: 0;
-background: #111118;
-border-top: 1px solid rgba(255,255,255,0.08);
-display: flex;
-padding: 10px 0 20px;
-z-index: 50;
-max-width: 480px;
-margin: 0 auto;
+/* Landscape fix */
+@media (orientation: landscape) {
+.page { max-width: 100%; padding-bottom: 40px; }
+.nav { position: relative; }
+.sec-head { padding: 14px 16px 8px; }
+.sec-title { font-size: 18px; }
+.card, .rcard, .vcard, .bkcard, .bento, .fcard { margin-left: 16px; margin-right: 16px; }
+.bento { grid-template-columns: repeat(3,1fr); }
+.bcard.wide { grid-column: span 3; }
+.ryield { font-size: 40px; }
 }
 
-.bnav-item {
-flex: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 4px;
-cursor: pointer;
+@media (min-width: 600px) {
+.page { max-width: 600px; margin: 0 auto; }
 }
-
-.bnav-icon { font-size: 20px; }
-
-.bnav-label {
-font-size: 9px;
-font-weight: 600;
-text-transform: uppercase;
-letter-spacing: 0.06em;
-color: #6B7280;
-}
-
-.bnav-item.active .bnav-label { color: #2D85FF; }
 
 /* Footer card */
 .fcard {
@@ -922,27 +904,6 @@ line-height: 1.6;
 
   <div class="disc">APY figures are illustrative estimates for educational purposes only. Not financial advice. DYOR. Built by a POTS community member.</div>
 
-</div>
-
-<!-- Bottom Nav -->
-
-<div class="bottom-nav">
-  <div class="bnav-item active">
-    <div class="bnav-icon">🧮</div>
-    <span class="bnav-label">Calculator</span>
-  </div>
-  <div class="bnav-item">
-    <div class="bnav-icon">📊</div>
-    <span class="bnav-label">Markets</span>
-  </div>
-  <div class="bnav-item">
-    <div class="bnav-icon">💰</div>
-    <span class="bnav-label">Yield</span>
-  </div>
-  <div class="bnav-item">
-    <div class="bnav-icon">🔗</div>
-    <span class="bnav-label">POTS</span>
-  </div>
 </div>
 
 <script>
