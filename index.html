@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" style="background:#050709;">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#050709">
 <title>POTS Capital Calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -11,94 +13,63 @@
   margin: 0; padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  color-scheme: dark;
 }
 
-:root {
-–bg: #050709;
-–surface: #0A0D14;
-–surface2: #0F1520;
-–surface3: #141C28;
-–border: rgba(255,255,255,0.06);
-–border2: rgba(255,255,255,0.1);
-–blue: #2D85FF;
-–gold: #F5A623;
-–red: #FF3D3D;
-–green: #00F080;
-–muted: #3A4B62;
-–text: #D8E4F0;
+html {
+background: #050709 !important;
+color-scheme: dark;
 }
-
-html { background: var(–bg); }
 
 body {
-background: var(–bg);
-color: var(–text);
+background: #050709 !important;
+color: #D8E4F0;
 font-family: ‘DM Mono’, ‘Courier New’, monospace;
 min-height: 100vh;
+min-height: -webkit-fill-available;
+width: 100%;
 overflow-x: hidden;
 position: relative;
+-webkit-font-smoothing: antialiased;
 }
 
-/* Animated noise texture overlay */
-body::after {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.03’/%3E%3C/svg%3E”);
-pointer-events: none;
-z-index: 100;
-opacity: 0.4;
+/* Force dark on all elements */
+input, button, div, span, p {
+background-color: transparent;
+color: inherit;
 }
 
-/* Grid */
-body::before {
-content: ‘’;
+/* Grid bg */
+.grid-bg {
 position: fixed;
 inset: 0;
 background-image:
-linear-gradient(rgba(45,133,255,0.04) 1px, transparent 1px),
-linear-gradient(90deg, rgba(45,133,255,0.04) 1px, transparent 1px);
-background-size: 44px 44px;
+linear-gradient(rgba(45,133,255,0.05) 1px, transparent 1px),
+linear-gradient(90deg, rgba(45,133,255,0.05) 1px, transparent 1px);
+background-size: 40px 40px;
 pointer-events: none;
 z-index: 0;
 }
 
 /* Glow orbs */
-.g1 {
+.orb {
 position: fixed;
-width: 600px; height: 600px;
-background: radial-gradient(circle, rgba(45,133,255,0.08) 0%, transparent 65%);
-top: -200px; left: -200px;
-pointer-events: none; z-index: 0;
-animation: drift1 12s ease-in-out infinite;
+border-radius: 50%;
+filter: blur(80px);
+pointer-events: none;
+z-index: 0;
 }
-.g2 {
-position: fixed;
-width: 500px; height: 500px;
-background: radial-gradient(circle, rgba(0,240,128,0.06) 0%, transparent 65%);
-bottom: -150px; right: -150px;
-pointer-events: none; z-index: 0;
-animation: drift2 15s ease-in-out infinite;
+.orb1 {
+width: 400px; height: 400px;
+background: rgba(45,133,255,0.1);
+top: -100px; left: -100px;
 }
-.g3 {
-position: fixed;
-width: 300px; height: 300px;
-background: radial-gradient(circle, rgba(245,166,35,0.05) 0%, transparent 65%);
-top: 50%; left: 50%;
-transform: translate(-50%, -50%);
-pointer-events: none; z-index: 0;
+.orb2 {
+width: 350px; height: 350px;
+background: rgba(0,240,128,0.07);
+bottom: -80px; right: -80px;
 }
 
-@keyframes drift1 {
-0%,100% { transform: translate(0,0); }
-50% { transform: translate(40px, 30px); }
-}
-@keyframes drift2 {
-0%,100% { transform: translate(0,0); }
-50% { transform: translate(-30px, -20px); }
-}
-
-/* Page */
 .page {
 position: relative;
 z-index: 1;
@@ -107,54 +78,47 @@ margin: 0 auto;
 padding: 28px 14px 64px;
 }
 
-/* ═══════════════════════════
-HEADER
-═══════════════════════════ */
-.header {
-margin-bottom: 28px;
-animation: up 0.7s ease both;
-}
-
-.live-pill {
+/* ── HEADER ── */
+.pill {
 display: inline-flex;
 align-items: center;
 gap: 7px;
-background: rgba(0,240,128,0.08);
-border: 1px solid rgba(0,240,128,0.2);
-color: var(–green);
+background: rgba(0,240,128,0.1);
+border: 1px solid rgba(0,240,128,0.25);
+color: #00F080;
 font-size: 9px;
-letter-spacing: 0.22em;
+letter-spacing: 0.2em;
 text-transform: uppercase;
-padding: 5px 12px 5px 10px;
+padding: 5px 14px;
 border-radius: 100px;
 margin-bottom: 18px;
 }
 
-.live-dot {
+.pill-dot {
 width: 5px; height: 5px;
 border-radius: 50%;
-background: var(–green);
-box-shadow: 0 0 6px var(–green);
-animation: pulse 1.8s ease infinite;
+background: #00F080;
+box-shadow: 0 0 6px #00F080;
+animation: blink 2s ease infinite;
 flex-shrink: 0;
 }
 
-@keyframes pulse {
-0%,100% { opacity:1; transform: scale(1); }
-50% { opacity:0.4; transform: scale(0.7); }
+@keyframes blink {
+0%,100%{opacity:1;transform:scale(1);}
+50%{opacity:0.3;transform:scale(0.7);}
 }
 
-.h-title {
+.h1 {
 font-family: ‘Bebas Neue’, ‘Arial Black’, sans-serif;
-font-size: 48px;
+font-size: 46px;
 line-height: 0.95;
 letter-spacing: 0.03em;
-color: #fff;
+color: #FFFFFF;
 margin-bottom: 12px;
 }
 
-.h-title .gold {
-background: linear-gradient(135deg, #F5A623, #FFD166, #F5A623);
+.h1-gold {
+background: linear-gradient(135deg, #F5A623 0%, #FFD166 50%, #F5A623 100%);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
@@ -162,513 +126,472 @@ background-clip: text;
 
 .h-sub {
 font-size: 11px;
-color: var(–muted);
+color: #3A4B62;
 line-height: 1.7;
 letter-spacing: 0.04em;
-max-width: 340px;
+margin-bottom: 24px;
 }
 
-/* ═══════════════════════════
-INPUT CARD
-═══════════════════════════ */
+/* ── CARD ── */
 .card {
-background: var(–surface);
-border: 1px solid var(–border2);
-border-radius: 12px;
+background: #0A0D14;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 14px;
 overflow: hidden;
-margin-bottom: 12px;
-animation: up 0.7s ease 0.1s both;
+margin-bottom: 10px;
 }
 
-.card-header {
+.card-top {
+background: #0F1520;
+padding: 14px 18px;
+border-bottom: 1px solid rgba(255,255,255,0.06);
 display: flex;
 align-items: center;
 gap: 8px;
-padding: 16px 18px 0;
-margin-bottom: 16px;
 }
 
 .card-icon {
-width: 28px; height: 28px;
+width: 26px; height: 26px;
 border-radius: 6px;
+background: rgba(45,133,255,0.15);
 display: flex; align-items: center; justify-content: center;
-font-size: 14px;
+font-size: 13px;
+color: #2D85FF;
 flex-shrink: 0;
 }
 
-.card-icon.blue { background: rgba(45,133,255,0.12); }
-.card-icon.gold { background: rgba(245,166,35,0.12); }
-.card-icon.green { background: rgba(0,240,128,0.1); }
-
 .card-title {
-font-size: 10px;
-letter-spacing: 0.18em;
+font-size: 9px;
+letter-spacing: 0.2em;
 text-transform: uppercase;
-color: var(–muted);
+color: #3A4B62;
 }
 
-/* Field */
-.field { padding: 0 18px 16px; }
+.card-body { padding: 18px; }
 
-.field-label {
+/* ── FIELD ── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
+
+.flabel {
 font-size: 9px;
 letter-spacing: 0.18em;
 text-transform: uppercase;
-color: var(–muted);
+color: #3A4B62;
 margin-bottom: 8px;
 }
 
-/* Amount input */
-.amount-box {
-background: var(–surface2);
-border: 1px solid var(–border2);
-border-radius: 8px;
+/* Amount */
+.amount-row {
+background: #131A24;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 10px;
 display: flex;
 align-items: center;
 padding: 0 16px;
-height: 64px;
+height: 66px;
 transition: border-color 0.2s, box-shadow 0.2s;
-position: relative;
-overflow: hidden;
 }
 
-.amount-box::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(45,133,255,0.03), transparent);
-pointer-events: none;
-}
-
-.amount-box:focus-within {
+.amount-row:focus-within {
 border-color: rgba(45,133,255,0.5);
-box-shadow: 0 0 0 3px rgba(45,133,255,0.08), inset 0 0 20px rgba(45,133,255,0.04);
+box-shadow: 0 0 0 3px rgba(45,133,255,0.1);
 }
 
-.amount-prefix {
+.apfx {
 font-family: ‘Bebas Neue’, sans-serif;
-font-size: 28px;
-color: var(–muted);
+font-size: 26px;
+color: #3A4B62;
 margin-right: 6px;
 flex-shrink: 0;
 }
 
+.asfx {
+font-size: 10px;
+letter-spacing: 0.15em;
+color: #3A4B62;
+margin-left: auto;
+flex-shrink: 0;
+}
+
 input[type=“number”] {
-background: transparent;
-border: none;
-outline: none;
+background: transparent !important;
+border: none !important;
+outline: none !important;
 font-family: ‘Bebas Neue’, ‘Arial Black’, sans-serif;
-font-size: 36px;
-color: #fff;
+font-size: 38px;
+color: #FFFFFF !important;
 letter-spacing: 0.02em;
 width: 100%;
 -moz-appearance: textfield;
+-webkit-appearance: none;
 }
 
 input[type=“number”]::-webkit-inner-spin-button,
 input[type=“number”]::-webkit-outer-spin-button { display: none; }
 
-.amount-suffix {
-font-size: 10px;
-letter-spacing: 0.15em;
-color: var(–muted);
-flex-shrink: 0;
-margin-left: 8px;
-}
-
 /* Slider */
-.slider-box {
-background: var(–surface2);
-border: 1px solid var(–border2);
-border-radius: 8px;
-padding: 14px 16px;
-margin-bottom: 8px;
+.slider-disp {
+background: #131A24;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 10px;
+padding: 14px 18px;
 display: flex;
 justify-content: space-between;
 align-items: center;
+margin-bottom: 10px;
 }
 
-.slider-num {
+.sval {
 font-family: ‘Bebas Neue’, sans-serif;
-font-size: 36px;
+font-size: 38px;
 color: #fff;
 line-height: 1;
 }
 
-.slider-unit {
+.sunit {
 font-size: 10px;
 letter-spacing: 0.15em;
-color: var(–muted);
+color: #3A4B62;
 }
 
-/* Custom range */
 input[type=“range”] {
 -webkit-appearance: none;
 appearance: none;
 width: 100%;
 height: 4px;
-background: var(–surface3);
+background: #1E2A3A;
 border-radius: 2px;
 outline: none;
 cursor: pointer;
+margin-bottom: 10px;
 }
 
 input[type=“range”]::-webkit-slider-thumb {
 -webkit-appearance: none;
-width: 24px; height: 24px;
+width: 26px; height: 26px;
 border-radius: 50%;
-background: linear-gradient(135deg, #4DA0FF, #2D85FF);
+background: linear-gradient(135deg, #5AABFF, #2D85FF);
 cursor: pointer;
-box-shadow: 0 0 0 4px rgba(45,133,255,0.18), 0 0 12px rgba(45,133,255,0.4);
-transition: box-shadow 0.2s;
+box-shadow: 0 0 0 4px rgba(45,133,255,0.2), 0 0 16px rgba(45,133,255,0.5);
 }
 
-input[type=“range”]:active::-webkit-slider-thumb {
-box-shadow: 0 0 0 8px rgba(45,133,255,0.12), 0 0 20px rgba(45,133,255,0.5);
-}
-
-/* Quick select days */
-.day-pills {
-display: flex;
+/* Day pills */
+.dpills {
+display: grid;
+grid-template-columns: repeat(5,1fr);
 gap: 6px;
-margin-top: 8px;
 }
 
-.day-pill {
-flex: 1;
-background: var(–surface3);
-border: 1px solid var(–border);
-border-radius: 6px;
-padding: 7px 4px;
+.dpill {
+background: #131A24;
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 8px;
+padding: 8px 4px;
 text-align: center;
 font-size: 11px;
-color: var(–muted);
+color: #3A4B62;
 cursor: pointer;
-letter-spacing: 0.05em;
 transition: all 0.15s;
 font-family: ‘DM Mono’, monospace;
 }
 
-.day-pill:hover { border-color: rgba(45,133,255,0.3); color: var(–text); }
-.day-pill.active {
-background: rgba(45,133,255,0.1);
+.dpill.on {
+background: rgba(45,133,255,0.12);
 border-color: rgba(45,133,255,0.4);
-color: var(–blue);
+color: #2D85FF;
 }
 
-/* APY buttons */
-.apy-grid {
+/* APY */
+.apygrid {
 display: grid;
-grid-template-columns: repeat(4, 1fr);
+grid-template-columns: repeat(4,1fr);
 gap: 8px;
 }
 
-.apy-btn {
-background: var(–surface2);
-border: 1px solid var(–border2);
-border-radius: 8px;
-padding: 12px 6px;
+.apybtn {
+background: #131A24;
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 10px;
+padding: 13px 6px;
 text-align: center;
 cursor: pointer;
 transition: all 0.18s;
-position: relative;
-overflow: hidden;
 }
 
-.apy-btn::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-opacity: 0;
-transition: opacity 0.2s;
-}
-
-.apy-btn.active::before { opacity: 1; }
-
-.apy-btn:nth-child(1)::before { background: rgba(0,240,128,0.06); }
-.apy-btn:nth-child(2)::before { background: rgba(45,133,255,0.08); }
-.apy-btn:nth-child(3)::before { background: rgba(245,166,35,0.08); }
-.apy-btn:nth-child(4)::before { background: rgba(255,61,61,0.06); }
-
-.apy-pct {
+.apypct {
 font-family: ‘Bebas Neue’, sans-serif;
-font-size: 24px;
-color: var(–muted);
+font-size: 26px;
+color: #3A4B62;
 display: block;
-letter-spacing: 0.03em;
 line-height: 1;
 margin-bottom: 3px;
-position: relative;
-transition: all 0.18s;
+letter-spacing: 0.02em;
 }
 
-.apy-lbl {
+.apylbl {
 font-size: 8px;
-color: var(–muted);
+color: #3A4B62;
 letter-spacing: 0.12em;
 text-transform: uppercase;
 display: block;
-position: relative;
-transition: all 0.18s;
 }
 
-/* Active states per button */
-.apy-btn:nth-child(1).active { border-color: rgba(0,240,128,0.3); }
-.apy-btn:nth-child(1).active .apy-pct { color: var(–green); }
-.apy-btn:nth-child(1).active .apy-lbl { color: rgba(0,240,128,0.6); }
+.apybtn.on0 { background:rgba(0,240,128,0.08); border-color:rgba(0,240,128,0.3); }
+.apybtn.on0 .apypct { color:#00F080; }
+.apybtn.on0 .apylbl { color:rgba(0,240,128,0.6); }
 
-.apy-btn:nth-child(2).active { border-color: rgba(45,133,255,0.35); }
-.apy-btn:nth-child(2).active .apy-pct { color: var(–blue); }
-.apy-btn:nth-child(2).active .apy-lbl { color: rgba(45,133,255,0.6); }
+.apybtn.on1 { background:rgba(45,133,255,0.1); border-color:rgba(45,133,255,0.4); }
+.apybtn.on1 .apypct { color:#2D85FF; }
+.apybtn.on1 .apylbl { color:rgba(45,133,255,0.6); }
 
-.apy-btn:nth-child(3).active { border-color: rgba(245,166,35,0.3); }
-.apy-btn:nth-child(3).active .apy-pct { color: var(–gold); }
-.apy-btn:nth-child(3).active .apy-lbl { color: rgba(245,166,35,0.6); }
+.apybtn.on2 { background:rgba(245,166,35,0.1); border-color:rgba(245,166,35,0.35); }
+.apybtn.on2 .apypct { color:#F5A623; }
+.apybtn.on2 .apylbl { color:rgba(245,166,35,0.6); }
 
-.apy-btn:nth-child(4).active { border-color: rgba(255,61,61,0.3); }
-.apy-btn:nth-child(4).active .apy-pct { color: var(–red); }
-.apy-btn:nth-child(4).active .apy-lbl { color: rgba(255,61,61,0.6); }
+.apybtn.on3 { background:rgba(255,61,61,0.08); border-color:rgba(255,61,61,0.3); }
+.apybtn.on3 .apypct { color:#FF3D3D; }
+.apybtn.on3 .apylbl { color:rgba(255,61,61,0.6); }
 
-/* ═══════════════════════════
-RESULTS — BIG COMPARISON
-═══════════════════════════ */
-.compare-row {
+/* ── COMPARE ── */
+.cmprow {
 display: grid;
 grid-template-columns: 1fr 1fr;
 gap: 10px;
 margin-bottom: 10px;
-animation: up 0.7s ease 0.15s both;
 }
 
-.result-card {
-border-radius: 12px;
+.rcard {
+background: #0A0D14;
+border-radius: 14px;
 padding: 20px 16px;
 position: relative;
 overflow: hidden;
-min-height: 160px;
+min-height: 170px;
 }
 
-.result-card.dead {
-background: linear-gradient(135deg, rgba(255,61,61,0.08) 0%, rgba(255,61,61,0.03) 100%);
-border: 1px solid rgba(255,61,61,0.18);
+.rcard.dead {
+border: 1px solid rgba(255,61,61,0.2);
+background: #0A0D14;
 }
 
-.result-card.live {
-background: linear-gradient(135deg, rgba(0,240,128,0.1) 0%, rgba(0,240,128,0.04) 100%);
-border: 1px solid rgba(0,240,128,0.22);
-}
-
-/* Glow effect behind number */
-.result-card.live::before {
+.rcard.dead::before {
 content: ‘’;
 position: absolute;
-bottom: -20px; right: -20px;
+inset: 0;
+background: linear-gradient(135deg, rgba(255,61,61,0.07), transparent 60%);
+pointer-events: none;
+}
+
+.rcard.live {
+border: 1px solid rgba(0,240,128,0.25);
+background: #0A0D14;
+}
+
+.rcard.live::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: linear-gradient(135deg, rgba(0,240,128,0.08), transparent 60%);
+pointer-events: none;
+}
+
+.rcard.live::after {
+content: ‘’;
+position: absolute;
+bottom: -30px; right: -30px;
 width: 120px; height: 120px;
 background: radial-gradient(circle, rgba(0,240,128,0.15), transparent 70%);
 pointer-events: none;
 }
 
-.result-card.dead::before {
-content: ‘’;
-position: absolute;
-bottom: -20px; right: -20px;
-width: 120px; height: 120px;
-background: radial-gradient(circle, rgba(255,61,61,0.1), transparent 70%);
-pointer-events: none;
-}
-
-.rc-tag {
+.rtag {
 font-size: 8px;
-letter-spacing: 0.2em;
+letter-spacing: 0.18em;
 text-transform: uppercase;
-margin-bottom: 8px;
+margin-bottom: 10px;
 display: flex;
 align-items: center;
 gap: 5px;
+position: relative;
 }
 
-.result-card.dead .rc-tag { color: var(–red); }
-.result-card.live .rc-tag { color: var(–green); }
+.rcard.dead .rtag { color: #FF3D3D; }
+.rcard.live .rtag { color: #00F080; }
 
-.rc-label {
+.rlbl {
 font-size: 9px;
-color: var(–muted);
-letter-spacing: 0.08em;
+color: #3A4B62;
 margin-bottom: 6px;
+letter-spacing: 0.06em;
+position: relative;
 }
 
-.rc-amount {
+.rnum {
 font-family: ‘Bebas Neue’, sans-serif;
-font-size: 42px;
+font-size: 44px;
 line-height: 1;
 letter-spacing: 0.02em;
 margin-bottom: 8px;
-transition: all 0.35s ease;
+transition: all 0.3s ease;
+position: relative;
 }
 
-.result-card.dead .rc-amount { color: var(–red); }
-.result-card.live .rc-amount {
-background: linear-gradient(135deg, #00F080, #00D4FF);
+.rcard.dead .rnum { color: #FF3D3D; }
+
+.rcard.live .rnum {
+background: linear-gradient(135deg, #00F080 0%, #00D4FF 100%);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
 }
 
-.rc-desc {
+.rdesc {
 font-size: 9px;
 line-height: 1.5;
 letter-spacing: 0.04em;
+position: relative;
 }
 
-.result-card.dead .rc-desc { color: rgba(255,61,61,0.5); }
-.result-card.live .rc-desc { color: rgba(0,240,128,0.5); }
+.rcard.dead .rdesc { color: rgba(255,61,61,0.45); }
+.rcard.live .rdesc { color: rgba(0,240,128,0.45); }
 
-/* ═══════════════════════════
-VERDICT CARD
-═══════════════════════════ */
-.verdict-card {
-background: var(–surface);
-border: 1px solid var(–border2);
-border-radius: 12px;
-padding: 18px 18px;
+/* ── VERDICT ── */
+.vcard {
+background: #0A0D14;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 14px;
+padding: 18px;
 margin-bottom: 10px;
 position: relative;
 overflow: hidden;
-animation: up 0.7s ease 0.2s both;
 }
 
-.verdict-card::before {
+.vcard::before {
 content: ‘’;
 position: absolute;
-top: 0; left: 0;
-width: 100%; height: 2px;
-background: linear-gradient(90deg, var(–gold), rgba(245,166,35,0.2), transparent);
+top: 0; left: 0; right: 0;
+height: 2px;
+background: linear-gradient(90deg, #F5A623, rgba(245,166,35,0.3), transparent);
 }
 
-.verdict-tag {
+.vtag {
 font-size: 8px;
-letter-spacing: 0.22em;
+letter-spacing: 0.2em;
 text-transform: uppercase;
-color: var(–gold);
+color: #F5A623;
 margin-bottom: 10px;
-display: flex;
-align-items: center;
-gap: 6px;
 }
 
-.verdict-body {
+.vbody {
 font-size: 12px;
-line-height: 1.75;
-color: #6B7D94;
+line-height: 1.8;
+color: #4A5E78;
 letter-spacing: 0.03em;
 }
 
-.verdict-body strong { color: var(–gold); }
-.verdict-body .g {
-color: var(–green);
+.vbody strong { color: #F5A623; }
+.vbody .g {
+color: #00F080;
 font-family: ‘Bebas Neue’, sans-serif;
-font-size: 15px;
-letter-spacing: 0.03em;
+font-size: 16px;
 }
-.verdict-body .r { color: var(–red); }
+.vbody .r { color: #FF3D3D; }
 
-/* ═══════════════════════════
-BENTO STATS
-═══════════════════════════ */
+/* ── BENTO ── */
 .bento {
 display: grid;
 grid-template-columns: 1fr 1fr;
 gap: 10px;
 margin-bottom: 10px;
-animation: up 0.7s ease 0.25s both;
 }
 
-.bento-card {
-background: var(–surface);
-border: 1px solid var(–border2);
-border-radius: 12px;
+.bcard {
+background: #0A0D14;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 14px;
 padding: 18px 16px;
 position: relative;
 overflow: hidden;
 }
 
-.bento-card.wide {
-grid-column: span 2;
-}
+.bcard.wide { grid-column: span 2; }
 
-.bento-label {
+.blbl {
 font-size: 9px;
 letter-spacing: 0.15em;
 text-transform: uppercase;
-color: var(–muted);
+color: #3A4B62;
 margin-bottom: 8px;
 }
 
-.bento-num {
+.bnum {
 font-family: ‘Bebas Neue’, sans-serif;
-font-size: 32px;
-letter-spacing: 0.02em;
+font-size: 34px;
 line-height: 1;
 margin-bottom: 4px;
-transition: all 0.3s ease;
+transition: all 0.3s;
+letter-spacing: 0.02em;
 }
 
-.bento-sub {
-font-size: 9px;
-color: var(–muted);
-letter-spacing: 0.08em;
-}
+.bsub { font-size: 9px; color: #3A4B62; }
 
-/* Progress bar inside bento */
-.prog-track {
-height: 5px;
-background: var(–surface3);
+/* Progress */
+.ptrack {
+height: 6px;
+background: #131A24;
 border-radius: 3px;
 overflow: hidden;
 margin: 12px 0 8px;
 }
 
-.prog-fill {
+.pfill {
 height: 100%;
 border-radius: 3px;
-background: linear-gradient(90deg, var(–green), #00D4FF);
-box-shadow: 0 0 8px rgba(0,240,128,0.5);
-transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+background: linear-gradient(90deg, #00F080, #00D4FF);
+box-shadow: 0 0 10px rgba(0,240,128,0.6);
+transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.prog-labels {
+.plabels {
 display: flex;
 justify-content: space-between;
 font-size: 8px;
-color: var(–muted);
+color: #3A4B62;
 letter-spacing: 0.1em;
 }
 
-/* ═══════════════════════════
-BREAKDOWN
-═══════════════════════════ */
-.breakdown-card {
-background: var(–surface);
-border: 1px solid var(–border2);
-border-radius: 12px;
+/* ── BREAKDOWN ── */
+.bkcard {
+background: #0A0D14;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 14px;
 overflow: hidden;
 margin-bottom: 10px;
-animation: up 0.7s ease 0.3s both;
 }
 
-.breakdown-row {
+.bkhead {
+background: #0F1520;
+padding: 12px 18px;
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 12px 18px;
+border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.bkrow {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 13px 18px;
 border-bottom: 1px solid rgba(255,255,255,0.04);
 transition: background 0.15s;
 }
 
-.breakdown-row:last-child { border-bottom: none; }
-.breakdown-row:hover { background: rgba(255,255,255,0.02); }
+.bkrow:last-child { border-bottom: none; }
+.bkrow:hover { background: rgba(255,255,255,0.02); }
 
-.bk { font-size: 11px; color: var(–muted); letter-spacing: 0.04em; }
+.bk { font-size: 11px; color: #3A4B62; }
 
 .bv {
 font-family: ‘Bebas Neue’, sans-serif;
@@ -677,56 +600,50 @@ letter-spacing: 0.04em;
 transition: all 0.3s;
 }
 
-/* ═══════════════════════════
-FOOTER
-═══════════════════════════ */
-.footer-card {
-background: var(–surface);
-border: 1px solid var(–border2);
-border-radius: 12px;
+/* ── FOOTER ── */
+.fcard {
+background: #0A0D14;
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 14px;
 padding: 16px 18px;
 display: flex;
 align-items: center;
 justify-content: space-between;
 flex-wrap: wrap;
 gap: 10px;
-animation: up 0.7s ease 0.35s both;
 }
 
-.footer-brand {
+.fbrand {
 font-family: ‘Bebas Neue’, sans-serif;
 font-size: 18px;
 letter-spacing: 0.08em;
-color: var(–muted);
+color: #3A4B62;
 }
 
-.footer-brand span {
-background: linear-gradient(90deg, #4DA0FF, #2D85FF);
+.fbrand span {
+background: linear-gradient(90deg, #5AABFF, #2D85FF);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 background-clip: text;
 }
 
-.footer-links { display: flex; gap: 8px; }
+.flinks { display: flex; gap: 8px; }
 
-.footer-link {
+.flink {
 font-size: 9px;
-letter-spacing: 0.1em;
-color: var(–muted);
-background: var(–surface2);
-border: 1px solid var(–border2);
+color: #3A4B62;
+background: #131A24;
+border: 1px solid rgba(255,255,255,0.08);
 padding: 6px 12px;
 border-radius: 100px;
 text-decoration: none;
+letter-spacing: 0.08em;
 transition: all 0.15s;
 }
 
-.footer-link:hover {
-color: var(–blue);
-border-color: rgba(45,133,255,0.35);
-}
+.flink:hover { color: #2D85FF; border-color: rgba(45,133,255,0.35); }
 
-.disclaimer {
+.disc {
 text-align: center;
 font-size: 9px;
 color: #1E2A3A;
@@ -735,106 +652,90 @@ line-height: 1.7;
 letter-spacing: 0.04em;
 }
 
-/* Section divider */
-.divider {
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–border2), transparent);
-margin: 0;
-}
-
 /* Flash */
 @keyframes flash {
-0% { opacity: 0.3; transform: scale(0.97); }
-100% { opacity: 1; transform: scale(1); }
+0%{opacity:0.3;transform:scale(0.97);}
+100%{opacity:1;transform:scale(1);}
 }
-.flash { animation: flash 0.25s ease; }
+.fl { animation: flash 0.25s ease; }
 
 /* Fade up */
 @keyframes up {
-from { opacity: 0; transform: translateY(18px); }
-to { opacity: 1; transform: translateY(0); }
+from{opacity:0;transform:translateY(16px);}
+to{opacity:1;transform:translateY(0);}
 }
+
+.header { animation: up 0.5s ease both; }
+.card { animation: up 0.5s ease 0.05s both; }
+.cmprow { animation: up 0.5s ease 0.1s both; }
+.vcard { animation: up 0.5s ease 0.15s both; }
+.bento { animation: up 0.5s ease 0.2s both; }
+.bkcard { animation: up 0.5s ease 0.25s both; }
+.fcard { animation: up 0.5s ease 0.3s both; }
 </style>
 
 </head>
 <body>
 
-<div class="g1"></div>
-<div class="g2"></div>
-<div class="g3"></div>
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
 
 <div class="page">
 
   <!-- Header -->
 
   <div class="header">
-    <div class="live-pill">
-      <div class="live-dot"></div>
-      Live Calculator
-    </div>
-    <div class="h-title">
-      How much are<br>you leaving on<br><span class="gold">the table?</span>
-    </div>
+    <div class="pill"><div class="pill-dot"></div>Live Calculator</div>
+    <div class="h1">How much are<br>you leaving on<br><span class="h1-gold">the table?</span></div>
     <p class="h-sub">Enter your position and resolution window to see exactly what your idle collateral costs you — and what POTS Money earns back.</p>
   </div>
 
   <!-- Input Card -->
 
   <div class="card">
-    <div class="card-header">
-      <div class="card-icon blue">◈</div>
-      <div class="card-title">Position Details</div>
+    <div class="card-top">
+      <div class="card-icon">◈</div>
+      <span class="card-title">Position Details</span>
     </div>
+    <div class="card-body">
 
 ```
-<!-- Amount -->
-<div class="field">
-  <div class="field-label">Collateral Amount</div>
-  <div class="amount-box">
-    <div class="amount-prefix">$</div>
-    <input type="number" id="amount" value="5000" min="1" max="10000000" inputmode="numeric" placeholder="5000"/>
-    <div class="amount-suffix">USDC</div>
+  <div class="field">
+    <div class="flabel">Collateral Amount</div>
+    <div class="amount-row">
+      <span class="apfx">$</span>
+      <input type="number" id="amount" value="5000" min="1" max="10000000" inputmode="numeric"/>
+      <span class="asfx">USDC</span>
+    </div>
   </div>
-</div>
 
-<!-- Days -->
-<div class="field">
-  <div class="field-label">Resolution Window</div>
-  <div class="slider-box">
-    <span class="slider-num" id="daysDisplay">14</span>
-    <span class="slider-unit">DAYS</span>
+  <div class="field">
+    <div class="flabel">Resolution Window</div>
+    <div class="slider-disp">
+      <span class="sval" id="dDisp">14</span>
+      <span class="sunit">DAYS</span>
+    </div>
+    <input type="range" id="days" min="1" max="90" value="14"/>
+    <div class="dpills">
+      <div class="dpill" data-d="3">3d</div>
+      <div class="dpill on" data-d="14">14d</div>
+      <div class="dpill" data-d="30">30d</div>
+      <div class="dpill" data-d="60">60d</div>
+      <div class="dpill" data-d="90">90d</div>
+    </div>
   </div>
-  <input type="range" id="days" min="1" max="90" value="14"/>
-  <div class="day-pills" style="margin-top:10px;">
-    <div class="day-pill" data-d="3">3d</div>
-    <div class="day-pill active" data-d="14">14d</div>
-    <div class="day-pill" data-d="30">30d</div>
-    <div class="day-pill" data-d="60">60d</div>
-    <div class="day-pill" data-d="90">90d</div>
-  </div>
-</div>
 
-<!-- APY -->
-<div class="field">
-  <div class="field-label">POTS Money Estimated APY</div>
-  <div class="apy-grid">
-    <div class="apy-btn" data-apy="5">
-      <span class="apy-pct">5%</span>
-      <span class="apy-lbl">Safe</span>
-    </div>
-    <div class="apy-btn active" data-apy="8">
-      <span class="apy-pct">8%</span>
-      <span class="apy-lbl">Base</span>
-    </div>
-    <div class="apy-btn" data-apy="12">
-      <span class="apy-pct">12%</span>
-      <span class="apy-lbl">Bull</span>
-    </div>
-    <div class="apy-btn" data-apy="18">
-      <span class="apy-pct">18%</span>
-      <span class="apy-lbl">Moon</span>
+  <div class="field">
+    <div class="flabel">POTS Money Est. APY</div>
+    <div class="apygrid">
+      <div class="apybtn" data-i="0" data-apy="5"><span class="apypct">5%</span><span class="apylbl">Safe</span></div>
+      <div class="apybtn on1" data-i="1" data-apy="8"><span class="apypct">8%</span><span class="apylbl">Base</span></div>
+      <div class="apybtn" data-i="2" data-apy="12"><span class="apypct">12%</span><span class="apylbl">Bull</span></div>
+      <div class="apybtn" data-i="3" data-apy="18"><span class="apypct">18%</span><span class="apylbl">Moon</span></div>
     </div>
   </div>
+
 </div>
 ```
 
@@ -842,214 +743,178 @@ to { opacity: 1; transform: translateY(0); }
 
   <!-- Compare -->
 
-  <div class="compare-row">
-    <div class="result-card dead">
-      <div class="rc-tag">❌ Polymarket</div>
-      <div class="rc-label">Yield on collateral</div>
-      <div class="rc-amount" id="polyYield">$0.00</div>
-      <div class="rc-desc" id="polySub">Capital locked.<br>Earning nothing.</div>
+  <div class="cmprow">
+    <div class="rcard dead">
+      <div class="rtag">❌ Polymarket</div>
+      <div class="rlbl">Yield on collateral</div>
+      <div class="rnum" id="polyYield">$0.00</div>
+      <div class="rdesc" id="polySub">Capital locked.<br>Earning nothing.</div>
     </div>
-    <div class="result-card live">
-      <div class="rc-tag">✅ POTS Money</div>
-      <div class="rc-label">Yield on collateral</div>
-      <div class="rc-amount" id="potsYield">$15.34</div>
-      <div class="rc-desc" id="potsSub">Capital working<br>while you wait.</div>
+    <div class="rcard live">
+      <div class="rtag">✅ POTS Money</div>
+      <div class="rlbl">Yield on collateral</div>
+      <div class="rnum" id="potsYield">$15.34</div>
+      <div class="rdesc" id="potsSub">Capital working<br>while you wait.</div>
     </div>
   </div>
 
   <!-- Verdict -->
 
-  <div class="verdict-card">
-    <div class="verdict-tag">⚡ Verdict</div>
-    <div class="verdict-body" id="verdictText">Loading...</div>
+  <div class="vcard">
+    <div class="vtag">⚡ Verdict</div>
+    <div class="vbody" id="vText">Loading...</div>
   </div>
 
-  <!-- Bento Stats -->
+  <!-- Bento -->
 
   <div class="bento">
-    <div class="bento-card">
-      <div class="bento-label">Daily Yield</div>
-      <div class="bento-num" id="statDaily" style="color:var(--green)">$0.00</div>
-      <div class="bento-sub">on POTS Money</div>
+    <div class="bcard">
+      <div class="blbl">Daily Yield</div>
+      <div class="bnum" id="statD" style="color:#00F080">$0.00</div>
+      <div class="bsub">on POTS Money</div>
     </div>
-    <div class="bento-card">
-      <div class="bento-label">Annual Projected</div>
-      <div class="bento-num" id="statAnnual" style="color:var(--blue)">$0</div>
-      <div class="bento-sub">at selected APY</div>
+    <div class="bcard">
+      <div class="blbl">Annual Projected</div>
+      <div class="bnum" id="statA" style="color:#2D85FF">$0</div>
+      <div class="bsub">at selected APY</div>
     </div>
-    <div class="bento-card wide">
-      <div class="bento-label">Capital Utilisation — Polymarket 0% vs POTS Money Active</div>
-      <div class="prog-track">
-        <div class="prog-fill" id="progFill" style="width:0%"></div>
+    <div class="bcard wide">
+      <div class="blbl">Capital Utilisation</div>
+      <div class="ptrack">
+        <div class="pfill" id="pfill" style="width:0%"></div>
       </div>
-      <div class="prog-labels">
-        <span>Polymarket: idle</span>
-        <span id="progLabel">POTS: 8% APY</span>
+      <div class="plabels">
+        <span>Polymarket: 0% (idle)</span>
+        <span id="pLabel">POTS: 8% APY active</span>
       </div>
     </div>
   </div>
 
   <!-- Breakdown -->
 
-  <div class="breakdown-card">
-    <div class="breakdown-row" style="background:var(--surface2);">
-      <span class="bk" style="color:var(--muted);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;">Calculation Breakdown</span>
-      <span style="font-size:9px;color:var(--muted);letter-spacing:0.1em;">// details</span>
+  <div class="bkcard">
+    <div class="bkhead">
+      <span style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#3A4B62;">Calculation Breakdown</span>
+      <span style="font-size:9px;color:#2D85FF;letter-spacing:0.1em;">// details</span>
     </div>
-    <div class="breakdown-row">
-      <span class="bk">Position Size</span>
-      <span class="bv" id="bAmount" style="color:#fff">$5,000</span>
-    </div>
-    <div class="breakdown-row">
-      <span class="bk">Resolution Window</span>
-      <span class="bv" id="bDays" style="color:#fff">14 days</span>
-    </div>
-    <div class="breakdown-row">
-      <span class="bk">APY Selected</span>
-      <span class="bv" id="bApy" style="color:var(--blue)">8%</span>
-    </div>
-    <div class="breakdown-row">
-      <span class="bk">Daily Rate</span>
-      <span class="bv" id="bRate" style="color:var(--blue)">0.0219%</span>
-    </div>
-    <div class="breakdown-row">
-      <span class="bk">Polymarket Yield</span>
-      <span class="bv" style="color:var(--red)">$0.00</span>
-    </div>
-    <div class="breakdown-row">
-      <span class="bk">POTS Money Yield</span>
-      <span class="bv" id="bPotsYield" style="color:var(--green)">$0.00</span>
-    </div>
-    <div class="breakdown-row">
-      <span class="bk">Left on the Table</span>
-      <span class="bv" id="bLost" style="color:var(--red)">$0.00</span>
-    </div>
+    <div class="bkrow"><span class="bk">Position Size</span><span class="bv" id="bAmt" style="color:#fff">$5,000</span></div>
+    <div class="bkrow"><span class="bk">Resolution Window</span><span class="bv" id="bDays" style="color:#fff">14 days</span></div>
+    <div class="bkrow"><span class="bk">APY Selected</span><span class="bv" id="bApy" style="color:#2D85FF">8%</span></div>
+    <div class="bkrow"><span class="bk">Daily Rate</span><span class="bv" id="bRate" style="color:#2D85FF">0.0219%</span></div>
+    <div class="bkrow"><span class="bk">Polymarket Yield</span><span class="bv" style="color:#FF3D3D">$0.00</span></div>
+    <div class="bkrow"><span class="bk">POTS Money Yield</span><span class="bv" id="bPots" style="color:#00F080">$0.00</span></div>
+    <div class="bkrow"><span class="bk">Left on the Table</span><span class="bv" id="bLost" style="color:#FF3D3D">$0.00</span></div>
   </div>
 
   <!-- Footer -->
 
-  <div class="footer-card">
-    <div class="footer-brand">POTS <span>Ecosystem</span></div>
-    <div class="footer-links">
-      <a class="footer-link" href="https://x.com/pots_market" target="_blank">@pots_market</a>
-      <a class="footer-link" href="https://x.com/pots_money" target="_blank">@pots_money</a>
+  <div class="fcard">
+    <div class="fbrand">POTS <span>Ecosystem</span></div>
+    <div class="flinks">
+      <a class="flink" href="https://x.com/pots_market" target="_blank">@pots_market</a>
+      <a class="flink" href="https://x.com/pots_money" target="_blank">@pots_money</a>
     </div>
   </div>
 
-  <p class="disclaimer">
-    APY figures are illustrative estimates for educational purposes only.<br>
-    Not financial advice. DYOR. Built by a POTS community member.
-  </p>
+  <p class="disc">APY figures are illustrative estimates for educational purposes only.<br>Not financial advice. DYOR. Built by a POTS community member.</p>
 
 </div>
 
 <script>
-  var apy = 8;
+var apy=8, apyIdx=1;
 
-  var amountEl = document.getElementById('amount');
-  var daysEl = document.getElementById('days');
-  var daysDisplay = document.getElementById('daysDisplay');
+function fmt(n,d){
+  d=d!==undefined?d:2;
+  if(n>=1000000)return'$'+(n/1000000).toFixed(2)+'M';
+  if(n>=1000)return'$'+n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  return'$'+n.toFixed(d);
+}
 
-  function fmt(n, dec) {
-    dec = (dec !== undefined) ? dec : 2;
-    if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
-    if (n >= 1000) return '$' + n.toLocaleString('en-US', {minimumFractionDigits:dec, maximumFractionDigits:dec});
-    return '$' + n.toFixed(dec);
+function fl(el){
+  el.classList.remove('fl');
+  void el.offsetWidth;
+  el.classList.add('fl');
+}
+
+function calc(){
+  var am=parseFloat(document.getElementById('amount').value)||0;
+  var dy=parseInt(document.getElementById('days').value)||1;
+  var dr=apy/100/365;
+  var py=am*dr*dy;
+  var dly=am*dr;
+  var ann=am*apy/100;
+
+  var pyEl=document.getElementById('polyYield');
+  var ptEl=document.getElementById('potsYield');
+  pyEl.textContent='$0.00';
+  ptEl.textContent=fmt(py);
+  fl(pyEl);fl(ptEl);
+
+  document.getElementById('polySub').textContent=fmt(am,0)+' locked '+dy+'d. $0 earned.';
+  document.getElementById('potsSub').textContent=fmt(py)+' at '+apy+'% APY.';
+
+  var sdEl=document.getElementById('statD');
+  var saEl=document.getElementById('statA');
+  sdEl.textContent=fmt(dly);
+  saEl.textContent=fmt(ann,0);
+  fl(sdEl);fl(saEl);
+
+  document.getElementById('pfill').style.width=(am>0?Math.min(apy*3,100):0)+'%';
+  document.getElementById('pLabel').textContent='POTS: '+apy+'% APY active';
+
+  var vEl=document.getElementById('vText');
+  if(!am){
+    vEl.innerHTML='Enter a position size above to see your calculation.';
+  } else {
+    vEl.innerHTML='You locked <strong>'+fmt(am,0)+'</strong> for <strong>'+dy+' day'+(dy!==1?'s':'')+'</strong>. On Polymarket that earned <span class="r">$0.00</span>. On POTS Money at '+apy+'% APY it earns <span class="g">'+fmt(py)+'</span>. That\'s <strong>'+fmt(py)+'</strong> left on the table — every single time.';
   }
 
-  function flash(el) {
-    el.classList.remove('flash');
-    void el.offsetWidth;
-    el.classList.add('flash');
-  }
+  document.getElementById('bAmt').textContent=fmt(am,0);
+  document.getElementById('bDays').textContent=dy+' day'+(dy!==1?'s':'');
+  document.getElementById('bApy').textContent=apy+'%';
+  document.getElementById('bRate').textContent=(dr*100).toFixed(4)+'%';
+  var bpEl=document.getElementById('bPots');
+  var blEl=document.getElementById('bLost');
+  bpEl.textContent=fmt(py);
+  blEl.textContent=fmt(py);
+  fl(bpEl);fl(blEl);
+}
 
-  function calc() {
-    var amount = parseFloat(amountEl.value) || 0;
-    var days = parseInt(daysEl.value) || 1;
-    var dailyRate = apy / 100 / 365;
-    var potsYield = amount * dailyRate * days;
-    var dailyYield = amount * dailyRate;
-    var annualYield = amount * apy / 100;
+document.getElementById('amount').addEventListener('input',calc);
 
-    // Compare
-    var pyEl = document.getElementById('polyYield');
-    var ptEl = document.getElementById('potsYield');
-    pyEl.textContent = '$0.00';
-    ptEl.textContent = fmt(potsYield);
-    flash(pyEl); flash(ptEl);
+document.getElementById('days').addEventListener('input',function(){
+  document.getElementById('dDisp').textContent=this.value;
+  document.querySelectorAll('.dpill').forEach(function(p){
+    p.classList.toggle('on',parseInt(p.dataset.d)===parseInt(document.getElementById('days').value));
+  });
+  calc();
+});
 
-    document.getElementById('polySub').textContent =
-      fmt(amount,0) + ' locked ' + days + 'd. $0 earned.';
-    document.getElementById('potsSub').textContent =
-      fmt(potsYield) + ' at ' + apy + '% APY.';
-
-    // Stats
-    var sdEl = document.getElementById('statDaily');
-    var saEl = document.getElementById('statAnnual');
-    sdEl.textContent = fmt(dailyYield);
-    saEl.textContent = fmt(annualYield, 0);
-    flash(sdEl); flash(saEl);
-
-    // Progress
-    document.getElementById('progFill').style.width = (amount > 0 ? Math.min(apy*3, 100) : 0) + '%';
-    document.getElementById('progLabel').textContent = 'POTS: ' + apy + '% APY';
-
-    // Verdict
-    var vEl = document.getElementById('verdictText');
-    if (!amount) {
-      vEl.innerHTML = 'Enter a position size above to see your calculation.';
-    } else {
-      vEl.innerHTML =
-        'You locked <strong>' + fmt(amount,0) + '</strong> for <strong>' + days + ' day' + (days!==1?'s':'') + '</strong>. ' +
-        'On Polymarket that capital earned <span class="r">$0.00</span>. ' +
-        'On POTS Money at ' + apy + '% APY it earns <span class="g">' + fmt(potsYield) + '</span>. ' +
-        'That\'s <strong>' + fmt(potsYield) + '</strong> left on the table — every single time you use a platform without a yield layer.';
-    }
-
-    // Breakdown
-    document.getElementById('bAmount').textContent = fmt(amount, 0);
-    document.getElementById('bDays').textContent = days + ' day' + (days!==1?'s':'');
-    document.getElementById('bApy').textContent = apy + '%';
-    document.getElementById('bRate').textContent = (dailyRate*100).toFixed(4) + '%';
-    var bpEl = document.getElementById('bPotsYield');
-    var blEl = document.getElementById('bLost');
-    bpEl.textContent = fmt(potsYield);
-    blEl.textContent = fmt(potsYield);
-    flash(bpEl); flash(blEl);
-  }
-
-  amountEl.addEventListener('input', calc);
-
-  daysEl.addEventListener('input', function() {
-    daysDisplay.textContent = this.value;
-    // Update day pill active state
-    document.querySelectorAll('.day-pill').forEach(function(p) {
-      p.classList.toggle('active', parseInt(p.dataset.d) === parseInt(daysEl.value));
-    });
+document.querySelectorAll('.dpill').forEach(function(p){
+  p.addEventListener('click',function(){
+    var d=parseInt(this.dataset.d);
+    document.getElementById('days').value=d;
+    document.getElementById('dDisp').textContent=d;
+    document.querySelectorAll('.dpill').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on');
     calc();
   });
+});
 
-  document.querySelectorAll('.day-pill').forEach(function(pill) {
-    pill.addEventListener('click', function() {
-      var d = parseInt(this.dataset.d);
-      daysEl.value = d;
-      daysDisplay.textContent = d;
-      document.querySelectorAll('.day-pill').forEach(function(p) { p.classList.remove('active'); });
-      this.classList.add('active');
-      calc();
+document.querySelectorAll('.apybtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var i=parseInt(this.dataset.i);
+    document.querySelectorAll('.apybtn').forEach(function(x){
+      x.className='apybtn';
     });
+    this.classList.add('on'+i);
+    apy=parseInt(this.dataset.apy);
+    apyIdx=i;
+    calc();
   });
+});
 
-  document.querySelectorAll('.apy-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.apy-btn').forEach(function(b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      apy = parseInt(this.dataset.apy);
-      calc();
-    });
-  });
-
-  calc();
+calc();
 </script>
 
 </body>
