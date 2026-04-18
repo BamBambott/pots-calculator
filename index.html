@@ -3,1025 +3,940 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0A0A0F">
-<meta name="color-scheme" content="dark">
-<title>POTS Capital Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POTS Calc — Idle Collateral Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after {
-  margin: 0; padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  color-scheme: dark;
-}
+  :root {
+    --green: #22c55e;
+    --green-dim: #16a34a;
+    --green-bg: #f0fdf4;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --blue: #3b82f6;
+    --amber: #f59e0b;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --border: #e5e7eb;
+    --surface: #ffffff;
+    --bg: #f9fafb;
+  }
 
-html, body {
-background: #0A0A0F !important;
-color: #FFFFFF;
-font-family: ‘Inter’, -apple-system, BlinkMacSystemFont, sans-serif;
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: ‘DM Sans’, sans-serif;
+background: var(–bg);
+color: var(–text);
 min-height: 100vh;
-min-height: -webkit-fill-available;
-overflow-x: hidden;
--webkit-font-smoothing: antialiased;
 }
 
-/* Ticker bar like PyPredict */
-.ticker {
-background: #111118;
-border-bottom: 1px solid rgba(255,255,255,0.08);
-padding: 10px 16px;
-display: flex;
-gap: 20px;
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-scrollbar-width: none;
-}
-.ticker::-webkit-scrollbar { display: none; }
-
-.tick-item {
-display: flex;
-align-items: center;
-gap: 6px;
-flex-shrink: 0;
-font-size: 12px;
-font-weight: 600;
-letter-spacing: 0.02em;
-}
-
-.tick-label { color: #6B7280; }
-.tick-val { color: #fff; }
-.tick-change { font-size: 11px; }
-.tick-change.up { color: #00E87A; }
-.tick-change.dn { color: #FF3D3D; }
-
-/* Nav */
-.nav {
-background: #0A0A0F;
-padding: 14px 16px;
+/* HEADER */
+header {
+background: var(–surface);
+border-bottom: 1px solid var(–border);
+padding: 14px 20px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-border-bottom: 1px solid rgba(255,255,255,0.06);
 position: sticky;
 top: 0;
-z-index: 50;
+z-index: 100;
 }
 
-.nav-brand {
+.logo {
 display: flex;
 align-items: center;
-gap: 10px;
-}
-
-.nav-logo {
-width: 36px; height: 36px;
-background: linear-gradient(135deg, #2D85FF, #00C3FF);
-border-radius: 10px;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 18px;
-font-weight: 900;
-color: #fff;
-font-family: ‘Bebas Neue’, sans-serif;
-letter-spacing: 0.02em;
-}
-
-.nav-name {
-font-size: 18px;
-font-weight: 800;
-color: #fff;
-letter-spacing: -0.02em;
-}
-
-.nav-badge {
-background: rgba(0,232,122,0.12);
-border: 1px solid rgba(0,232,122,0.3);
-color: #00E87A;
-font-size: 10px;
-font-weight: 600;
-padding: 4px 10px;
-border-radius: 100px;
-display: flex;
-align-items: center;
-gap: 5px;
-}
-
-.nav-dot {
-width: 5px; height: 5px;
-border-radius: 50%;
-background: #00E87A;
-box-shadow: 0 0 6px #00E87A;
-animation: blink 2s ease infinite;
-}
-
-@keyframes blink {
-0%,100%{opacity:1;} 50%{opacity:0.3;}
-}
-
-/* Page */
-.page {
-padding: 0 0 40px;
-max-width: 480px;
-margin: 0 auto;
-}
-
-/* Section header */
-.sec-head {
-padding: 20px 16px 10px;
-}
-
-.sec-title {
-font-size: 22px;
-font-weight: 800;
-color: #fff;
-letter-spacing: -0.03em;
-margin-bottom: 4px;
-}
-
-.sec-title span {
-background: linear-gradient(135deg, #F5A623, #FFD166);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
-
-.sec-sub {
-font-size: 13px;
-color: #6B7280;
-line-height: 1.5;
-}
-
-/* Card */
-.card {
-background: #111118;
-border-radius: 16px;
-margin: 0 16px 12px;
-overflow: hidden;
-border: 1px solid rgba(255,255,255,0.07);
-}
-
-.card-header {
-padding: 14px 16px;
-border-bottom: 1px solid rgba(255,255,255,0.06);
-display: flex;
-align-items: center;
-justify-content: space-between;
-}
-
-.card-label {
-font-size: 12px;
-font-weight: 600;
-color: #6B7280;
-letter-spacing: 0.05em;
-text-transform: uppercase;
-}
-
-.card-body { padding: 16px; }
-
-/* Input */
-.field { margin-bottom: 16px; }
-.field:last-child { margin-bottom: 0; }
-
-.flabel {
-font-size: 11px;
-font-weight: 600;
-color: #6B7280;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-margin-bottom: 8px;
-}
-
-.input-row {
-background: #1A1A24;
-border: 1.5px solid rgba(255,255,255,0.08);
-border-radius: 12px;
-display: flex;
-align-items: center;
-padding: 0 16px;
-height: 62px;
-transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.input-row:focus-within {
-border-color: #2D85FF;
-box-shadow: 0 0 0 3px rgba(45,133,255,0.15);
-}
-
-.ipfx {
-font-size: 22px;
-font-weight: 700;
-color: #6B7280;
-margin-right: 6px;
-flex-shrink: 0;
-}
-
-input[type=“number”] {
-background: transparent !important;
-border: none !important;
-outline: none !important;
-font-size: 28px;
-font-weight: 800;
-color: #FFFFFF !important;
-letter-spacing: -0.02em;
-width: 100%;
--moz-appearance: textfield;
--webkit-appearance: none;
-font-family: ‘Inter’, sans-serif;
-}
-
-input[type=“number”]::-webkit-inner-spin-button,
-input[type=“number”]::-webkit-outer-spin-button { display: none; }
-
-.isfx {
-font-size: 12px;
-font-weight: 600;
-color: #6B7280;
-margin-left: 8px;
-flex-shrink: 0;
-letter-spacing: 0.05em;
-}
-
-/* Slider */
-.slider-disp {
-background: #1A1A24;
-border: 1.5px solid rgba(255,255,255,0.08);
-border-radius: 12px;
-padding: 14px 16px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 10px;
-}
-
-.sval {
-font-size: 28px;
-font-weight: 800;
-color: #fff;
-letter-spacing: -0.02em;
-}
-
-.sunit {
-font-size: 12px;
-font-weight: 600;
-color: #6B7280;
-letter-spacing: 0.05em;
-}
-
-input[type=“range”] {
--webkit-appearance: none;
-appearance: none;
-width: 100%;
-height: 4px;
-background: #1A1A24;
-border-radius: 2px;
-outline: none;
-cursor: pointer;
-margin-bottom: 10px;
-}
-
-input[type=“range”]::-webkit-slider-thumb {
--webkit-appearance: none;
-width: 24px; height: 24px;
-border-radius: 50%;
-background: #2D85FF;
-cursor: pointer;
-box-shadow: 0 0 0 4px rgba(45,133,255,0.2), 0 0 16px rgba(45,133,255,0.5);
-}
-
-/* Day pills */
-.dpills {
-display: grid;
-grid-template-columns: repeat(5,1fr);
-gap: 6px;
-}
-
-.dpill {
-background: #1A1A24;
-border: 1.5px solid rgba(255,255,255,0.07);
-border-radius: 10px;
-padding: 9px 4px;
-text-align: center;
-font-size: 12px;
-font-weight: 600;
-color: #6B7280;
-cursor: pointer;
-transition: all 0.15s;
-}
-
-.dpill.on {
-background: rgba(45,133,255,0.12);
-border-color: #2D85FF;
-color: #2D85FF;
-}
-
-/* APY */
-.apygrid {
-display: grid;
-grid-template-columns: repeat(4,1fr);
 gap: 8px;
 }
 
-.apybtn {
-background: #1A1A24;
-border: 1.5px solid rgba(255,255,255,0.07);
-border-radius: 12px;
-padding: 12px 6px;
-text-align: center;
-cursor: pointer;
-transition: all 0.18s;
+.logo-icon {
+width: 28px;
+height: 28px;
 }
 
-.apypct {
-font-size: 20px;
-font-weight: 800;
-color: #6B7280;
-display: block;
-line-height: 1;
-margin-bottom: 3px;
-letter-spacing: -0.02em;
-}
-
-.apylbl {
-font-size: 9px;
+.logo-text {
+font-size: 15px;
 font-weight: 600;
-color: #6B7280;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-display: block;
+color: var(–text-muted);
+letter-spacing: 0.01em;
 }
 
-.apybtn.on0 { background:rgba(0,232,122,0.1); border-color:#00E87A; }
-.apybtn.on0 .apypct { color:#00E87A; }
-.apybtn.on0 .apylbl { color:rgba(0,232,122,0.7); }
+.live-badge {
+display: flex;
+align-items: center;
+gap: 6px;
+border: 1.5px solid var(–green);
+border-radius: 20px;
+padding: 4px 12px;
+font-size: 12px;
+font-weight: 500;
+color: var(–green-dim);
+}
 
-.apybtn.on1 { background:rgba(45,133,255,0.1); border-color:#2D85FF; }
-.apybtn.on1 .apypct { color:#2D85FF; }
-.apybtn.on1 .apylbl { color:rgba(45,133,255,0.7); }
+.live-dot {
+width: 7px;
+height: 7px;
+border-radius: 50%;
+background: var(–green);
+animation: pulse 2s infinite;
+}
 
-.apybtn.on2 { background:rgba(245,166,35,0.1); border-color:#F5A623; }
-.apybtn.on2 .apypct { color:#F5A623; }
-.apybtn.on2 .apylbl { color:rgba(245,166,35,0.7); }
+@keyframes pulse {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.5; transform: scale(0.8); }
+}
 
-.apybtn.on3 { background:rgba(255,61,61,0.1); border-color:#FF3D3D; }
-.apybtn.on3 .apypct { color:#FF3D3D; }
-.apybtn.on3 .apylbl { color:rgba(255,61,61,0.7); }
+/* MAIN */
+main {
+max-width: 520px;
+margin: 0 auto;
+padding: 28px 16px 60px;
+}
 
-/* ── BIG RESULT CARDS ── like PyPredict market cards */
-.rcard {
-background: #111118;
+/* HERO */
+.hero {
+margin-bottom: 28px;
+animation: fadeUp 0.5s ease both;
+}
+
+.hero h1 {
+font-size: 28px;
+font-weight: 300;
+line-height: 1.25;
+color: var(–text-muted);
+margin-bottom: 6px;
+}
+
+.hero h1 strong {
+font-weight: 700;
+color: var(–text);
+}
+
+.hero p {
+font-size: 14px;
+color: var(–text-light);
+}
+
+/* CARD */
+.card {
+background: var(–surface);
+border: 1px solid var(–border);
 border-radius: 16px;
-margin: 0 16px 10px;
-padding: 18px 16px;
-border: 1px solid rgba(255,255,255,0.07);
-position: relative;
-overflow: hidden;
+padding: 20px;
+margin-bottom: 12px;
+animation: fadeUp 0.5s ease both;
 }
 
-.rcard.dead { border-top: 3px solid #FF3D3D; }
-.rcard.live { border-top: 3px solid #00E87A; }
+.card-label {
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 0.12em;
+color: var(–text-light);
+text-transform: uppercase;
+margin-bottom: 16px;
+}
 
-.rcard-top {
+/* COLLATERAL INPUT */
+.field-label {
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 0.1em;
+color: var(–text-light);
+text-transform: uppercase;
+margin-bottom: 10px;
+}
+
+.amount-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 20px;
+}
+
+.amount-input-wrap {
+display: flex;
+align-items: center;
+gap: 4px;
+}
+
+.amount-prefix {
+font-size: 26px;
+font-weight: 300;
+color: var(–text-muted);
+}
+
+.amount-input {
+font-family: ‘DM Mono’, monospace;
+font-size: 32px;
+font-weight: 400;
+color: var(–text);
+border: none;
+outline: none;
+background: transparent;
+width: 160px;
+caret-color: var(–green);
+}
+
+.amount-unit {
+font-size: 12px;
+font-weight: 600;
+color: var(–text-light);
+letter-spacing: 0.05em;
+}
+
+/* DAYS */
+.days-row {
 display: flex;
 align-items: center;
 justify-content: space-between;
 margin-bottom: 14px;
 }
 
-.rcard-platform {
-display: flex;
-align-items: center;
-gap: 8px;
+.days-display {
+font-family: ‘DM Mono’, monospace;
+font-size: 32px;
+font-weight: 400;
+color: var(–text);
 }
 
-.rcard-icon {
-width: 32px; height: 32px;
-border-radius: 8px;
-display: flex; align-items: center; justify-content: center;
-font-size: 16px;
-}
-
-.rcard.dead .rcard-icon { background: rgba(255,61,61,0.12); }
-.rcard.live .rcard-icon { background: rgba(0,232,122,0.1); }
-
-.rcard-name {
-font-size: 14px;
-font-weight: 700;
-color: #fff;
-}
-
-.rcard-sub {
-font-size: 11px;
-color: #6B7280;
-}
-
-.ryield-label {
-font-size: 11px;
+.days-unit {
+font-size: 12px;
 font-weight: 600;
-color: #6B7280;
-text-transform: uppercase;
+color: var(–text-light);
 letter-spacing: 0.05em;
 }
 
-/* Big yield number */
-.ryield {
-font-size: 52px;
-font-weight: 800;
-letter-spacing: -0.03em;
-line-height: 1;
-margin: 8px 0 12px;
-transition: all 0.3s ease;
-}
-
-.rcard.dead .ryield { color: #FF3D3D; }
-.rcard.live .ryield { color: #00E87A; }
-
-/* Progress bar like PyPredict YES/NO */
-.prog-wrap { margin-bottom: 14px; }
-
-.prog-labels {
+.preset-grid {
 display: flex;
-justify-content: space-between;
-margin-bottom: 6px;
-}
-
-.prog-yes {
-font-size: 12px;
-font-weight: 700;
-color: #00E87A;
-}
-
-.prog-no {
-font-size: 12px;
-font-weight: 700;
-color: #FF3D3D;
-}
-
-.prog-track {
-height: 8px;
-border-radius: 4px;
-background: #FF3D3D;
-overflow: hidden;
-}
-
-.prog-fill {
-height: 100%;
-border-radius: 4px;
-background: #00E87A;
-transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
-}
-
-/* Buy buttons like PyPredict */
-.btn-row {
-display: grid;
-grid-template-columns: 1fr 1fr;
 gap: 8px;
 }
 
-.btn {
-padding: 14px;
-border-radius: 12px;
-text-align: center;
-font-weight: 700;
-font-size: 14px;
-border: none;
-cursor: pointer;
-letter-spacing: 0.02em;
-}
-
-.btn-green {
-background: #00E87A;
-color: #000;
-}
-
-.btn-red {
-background: #FF3D3D;
-color: #fff;
-}
-
-.btn-sub {
-font-size: 11px;
-font-weight: 500;
-opacity: 0.8;
-display: block;
-margin-top: 2px;
-}
-
-/* Stats bento */
-.bento {
-margin: 0 16px 10px;
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 8px;
-}
-
-.bcard {
-background: #111118;
-border: 1px solid rgba(255,255,255,0.07);
-border-radius: 14px;
-padding: 14px;
-}
-
-.bcard.wide { grid-column: span 2; }
-
-.blbl {
-font-size: 11px;
-font-weight: 600;
-color: #6B7280;
-text-transform: uppercase;
-letter-spacing: 0.06em;
-margin-bottom: 6px;
-}
-
-.bnum {
-font-size: 28px;
-font-weight: 800;
-letter-spacing: -0.02em;
-line-height: 1;
-transition: all 0.3s;
-}
-
-.bsub { font-size: 11px; color: #6B7280; margin-top: 3px; }
-
-/* Progress inside bento */
-.bp-track {
-height: 6px;
-background: #1A1A24;
-border-radius: 3px;
-overflow: hidden;
-margin: 10px 0 6px;
-}
-
-.bp-fill {
-height: 100%;
-background: linear-gradient(90deg, #00E87A, #00D4FF);
-border-radius: 3px;
-box-shadow: 0 0 8px rgba(0,232,122,0.5);
-transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
-}
-
-.bp-labels {
-display: flex;
-justify-content: space-between;
-font-size: 10px;
-color: #6B7280;
-}
-
-/* Verdict */
-.vcard {
-background: #111118;
-border-radius: 16px;
-margin: 0 16px 10px;
-padding: 16px;
-border: 1px solid rgba(255,255,255,0.07);
-border-left: 3px solid #F5A623;
-}
-
-.vtag {
-font-size: 11px;
-font-weight: 700;
-color: #F5A623;
-text-transform: uppercase;
-letter-spacing: 0.08em;
-margin-bottom: 8px;
-}
-
-.vbody {
+.preset-btn {
+flex: 1;
+padding: 8px 0;
+border: 1.5px solid var(–border);
+border-radius: 10px;
+background: transparent;
+font-family: ‘DM Sans’, sans-serif;
 font-size: 13px;
-line-height: 1.7;
-color: #9CA3AF;
-}
-
-.vbody strong { color: #F5A623; font-weight: 700; }
-.vbody .g { color: #00E87A; font-weight: 700; }
-.vbody .r { color: #FF3D3D; font-weight: 700; }
-
-/* Breakdown */
-.bkcard {
-background: #111118;
-border-radius: 16px;
-margin: 0 16px 10px;
-overflow: hidden;
-border: 1px solid rgba(255,255,255,0.07);
-}
-
-.bkhead {
-background: #1A1A24;
-padding: 12px 16px;
-display: flex;
-justify-content: space-between;
-border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.bkrow {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 12px 16px;
-border-bottom: 1px solid rgba(255,255,255,0.04);
-transition: background 0.15s;
-}
-
-.bkrow:last-child { border-bottom: none; }
-
-.bk { font-size: 13px; color: #9CA3AF; }
-
-.bv {
-font-size: 14px;
-font-weight: 700;
-transition: all 0.3s;
-}
-
-/* Compare wrap - portrait default */
-.compare-wrap .rcard { margin-left: 16px; margin-right: 16px; }
-
-/* Landscape fix */
-@media (orientation: landscape) {
-.page { max-width: 100%; padding-bottom: 40px; }
-.nav { position: relative; }
-.sec-head { padding: 14px 16px 8px; }
-.sec-title { font-size: 18px; }
-.card, .vcard, .bkcard, .fcard { margin-left: 16px; margin-right: 16px; }
-.bento { grid-template-columns: repeat(3,1fr); margin-left: 16px; margin-right: 16px; }
-.bcard.wide { grid-column: span 3; }
-.ryield { font-size: 36px; }
-
-/* Side by side cards in landscape */
-.compare-wrap {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 10px;
-margin: 0 16px 10px;
-}
-
-.compare-wrap .rcard {
-margin: 0;
-}
-}
-
-@media (min-width: 600px) {
-.page { max-width: 600px; margin: 0 auto; }
-}
-
-/* Footer card */
-.fcard {
-background: #111118;
-border: 1px solid rgba(255,255,255,0.07);
-border-radius: 16px;
-margin: 0 16px 10px;
-padding: 14px 16px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-}
-
-.fbrand {
-font-size: 18px;
-font-weight: 800;
-color: #fff;
-letter-spacing: -0.02em;
-}
-
-.fbrand span { color: #2D85FF; }
-
-.flinks { display: flex; gap: 8px; }
-
-.flink {
-font-size: 11px;
-font-weight: 600;
-color: #9CA3AF;
-background: #1A1A24;
-border: 1px solid rgba(255,255,255,0.08);
-padding: 6px 12px;
-border-radius: 100px;
-text-decoration: none;
+font-weight: 500;
+color: var(–text-muted);
+cursor: pointer;
 transition: all 0.15s;
 }
 
-.flink:hover { color: #2D85FF; }
+.preset-btn:hover {
+border-color: var(–blue);
+color: var(–blue);
+}
 
-.disc {
+.preset-btn.active {
+border-color: var(–blue);
+color: var(–blue);
+font-weight: 600;
+background: #eff6ff;
+}
+
+/* APY */
+.apy-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 8px;
+}
+
+.apy-btn {
+padding: 12px 4px;
+border: 1.5px solid var(–border);
+border-radius: 12px;
+background: transparent;
+font-family: ‘DM Sans’, sans-serif;
+cursor: pointer;
 text-align: center;
-font-size: 10px;
-color: #374151;
-padding: 0 16px 10px;
-line-height: 1.6;
+transition: all 0.15s;
 }
 
-/* Flash */
-@keyframes flash {
-0%{opacity:0.4;transform:scale(0.97);}
-100%{opacity:1;transform:scale(1);}
+.apy-btn:hover {
+border-color: var(–blue);
 }
-.fl { animation: flash 0.2s ease; }
+
+.apy-btn.active {
+border-color: var(–blue);
+background: #eff6ff;
+}
+
+.apy-pct {
+font-size: 18px;
+font-weight: 700;
+color: var(–text-muted);
+display: block;
+margin-bottom: 2px;
+}
+
+.apy-btn.active .apy-pct {
+color: var(–blue);
+}
+
+.apy-label {
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 0.08em;
+color: var(–text-light);
+text-transform: uppercase;
+}
+
+/* COMPARISON CARDS */
+.compare-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 12px;
+}
+
+.compare-card {
+border-radius: 14px;
+padding: 14px;
+border: 2px solid transparent;
+}
+
+.compare-card.idle {
+background: var(–red-bg);
+border-color: #fecaca;
+}
+
+.compare-card.earning {
+background: var(–green-bg);
+border-color: #bbf7d0;
+}
+
+.compare-icon {
+font-size: 18px;
+margin-bottom: 6px;
+display: block;
+}
+
+.compare-name {
+font-size: 13px;
+font-weight: 600;
+color: var(–text-muted);
+margin-bottom: 2px;
+}
+
+.compare-sub {
+font-size: 11px;
+color: var(–text-light);
+}
+
+/* RESULT CARD */
+.result-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 12px;
+animation: fadeUp 0.5s ease both;
+}
+
+.result-amount {
+font-family: ‘DM Mono’, monospace;
+font-size: 48px;
+font-weight: 400;
+line-height: 1;
+margin: 6px 0 12px;
+transition: color 0.3s;
+}
+
+.result-amount.idle { color: var(–red); }
+.result-amount.earning { color: var(–green); }
+
+.result-bar-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 4px;
+}
+
+.result-bar-label {
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+}
+
+.result-bar-label.yield { color: var(–green); }
+.result-bar-label.idle-lbl { color: var(–red); }
+
+/* VERDICT */
+.verdict-card {
+border-left: 3px solid var(–amber);
+background: #fffbeb;
+border-radius: 0 12px 12px 0;
+padding: 16px;
+margin-bottom: 12px;
+animation: fadeUp 0.5s ease both;
+}
+
+.verdict-title {
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 0.12em;
+color: var(–amber);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+
+.verdict-text {
+font-size: 14px;
+line-height: 1.6;
+color: var(–text-muted);
+}
+
+.verdict-text .hl-amount { color: var(–red); font-weight: 600; }
+.verdict-text .hl-days { color: var(–amber); font-weight: 600; }
+.verdict-text .hl-zero { color: var(–red); font-weight: 600; }
+.verdict-text .hl-yield { color: var(–text); font-weight: 600; }
+.verdict-text .hl-table { color: var(–amber); font-weight: 600; }
+
+/* STATS ROW */
+.stats-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 12px;
+}
+
+.stat-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 16px;
+animation: fadeUp 0.5s ease both;
+}
+
+.stat-label {
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 0.1em;
+color: var(–text-light);
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+
+.stat-value {
+font-family: ‘DM Mono’, monospace;
+font-size: 26px;
+font-weight: 400;
+color: var(–green);
+line-height: 1.1;
+}
+
+.stat-sub {
+font-size: 11px;
+color: var(–text-light);
+margin-top: 3px;
+}
+
+/* UTILISATION BAR */
+.util-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 12px;
+animation: fadeUp 0.5s ease both;
+}
+
+.util-labels {
+display: flex;
+justify-content: space-between;
+margin-bottom: 10px;
+font-size: 12px;
+color: var(–text-muted);
+}
+
+.util-bar-track {
+height: 8px;
+background: var(–red-bg);
+border-radius: 99px;
+overflow: hidden;
+margin-bottom: 6px;
+}
+
+.util-bar-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–green), var(–green-dim));
+border-radius: 99px;
+transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+width: 0%;
+}
+
+/* BREAKDOWN */
+.breakdown-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 12px;
+animation: fadeUp 0.5s ease both;
+}
+
+.breakdown-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 16px;
+cursor: pointer;
+}
+
+.breakdown-toggle {
+font-size: 12px;
+font-weight: 600;
+color: var(–blue);
+background: none;
+border: none;
+cursor: pointer;
+font-family: inherit;
+}
+
+.breakdown-table {
+display: none;
+}
+
+.breakdown-table.open {
+display: block;
+}
+
+.breakdown-row {
+display: flex;
+justify-content: space-between;
+padding: 10px 0;
+border-bottom: 1px solid var(–border);
+font-size: 13px;
+}
+
+.breakdown-row:last-child { border-bottom: none; }
+
+.breakdown-key { color: var(–text-light); }
+
+.breakdown-val {
+font-weight: 500;
+color: var(–text);
+font-family: ‘DM Mono’, monospace;
+font-size: 12px;
+}
+
+.breakdown-val.green { color: var(–green); }
+.breakdown-val.red { color: var(–red); }
+.breakdown-val.blue { color: var(–blue); }
+
+/* EARN/IDLE COMPARE */
+.earn-idle-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 12px;
+}
+
+.earn-idle-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 16px;
+}
+
+.ei-label {
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 0.1em;
+color: var(–text-light);
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+
+.ei-amount {
+font-family: ‘DM Mono’, monospace;
+font-size: 20px;
+font-weight: 500;
+line-height: 1.2;
+}
+
+.ei-amount.green { color: var(–green); }
+.ei-amount.red { color: var(–red); }
+
+.ei-sub {
+font-size: 11px;
+color: var(–text-light);
+margin-top: 3px;
+}
+
+/* FOOTER */
+footer {
+background: var(–surface);
+border-top: 1px solid var(–border);
+padding: 20px 16px;
+text-align: center;
+}
+
+.footer-brand {
+font-size: 15px;
+font-weight: 700;
+margin-bottom: 8px;
+}
+
+.footer-brand span { color: var(–blue); }
+
+.footer-handles {
+display: flex;
+justify-content: center;
+gap: 16px;
+margin-bottom: 12px;
+}
+
+.footer-handles a {
+font-size: 12px;
+color: var(–text-light);
+text-decoration: none;
+}
+
+.footer-handles a:hover { color: var(–blue); }
+
+.footer-disclaimer {
+font-size: 11px;
+color: var(–text-light);
+line-height: 1.6;
+max-width: 400px;
+margin: 0 auto;
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger cards */
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.result-card { animation-delay: 0.2s; }
+.verdict-card { animation-delay: 0.25s; }
+.stats-grid .stat-card:nth-child(1) { animation-delay: 0.3s; }
+.stats-grid .stat-card:nth-child(2) { animation-delay: 0.35s; }
+.util-card { animation-delay: 0.4s; }
+.breakdown-card { animation-delay: 0.45s; }
 </style>
 
 </head>
 <body>
 
-<!-- Ticker -->
-
-<div class="ticker">
-  <div class="tick-item"><span class="tick-label">POTS</span><span class="tick-val">$0.00</span><span class="tick-change up">▲LIVE</span></div>
-  <div class="tick-item"><span class="tick-label">BTC</span><span class="tick-val">$84,230</span><span class="tick-change up">▲0.42%</span></div>
-  <div class="tick-item"><span class="tick-label">ETH</span><span class="tick-val">$1,588</span><span class="tick-change dn">▼0.18%</span></div>
-  <div class="tick-item"><span class="tick-label">BNB</span><span class="tick-val">$583</span><span class="tick-change up">▲0.31%</span></div>
-  <div class="tick-item"><span class="tick-label">POLY</span><span class="tick-val">$8B/mo</span><span class="tick-change up">▲VOL</span></div>
-</div>
-
-<!-- Nav -->
-
-<div class="nav">
-  <div class="nav-brand">
-    <div class="nav-logo">P</div>
-    <span class="nav-name">POTS Calc</span>
+<header>
+  <div class="logo">
+    <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="28" height="28" rx="6" fill="#f0fdf4"/>
+      <path d="M8 14C8 10.686 10.686 8 14 8C17.314 8 20 10.686 20 14" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M11 17L14 14L17 17" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="14" cy="14" r="2" fill="#22c55e"/>
+    </svg>
+    <span class="logo-text">POTS Calc</span>
   </div>
-  <div class="nav-badge">
-    <div class="nav-dot"></div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
     Live
   </div>
-</div>
+</header>
 
-<div class="page">
-
-  <!-- Header -->
-
-  <div class="sec-head">
-    <div class="sec-title">How much are you leaving<br>on <span>the table?</span></div>
-    <div class="sec-sub">Calculate your idle collateral cost vs POTS Money yield</div>
+<main>
+  <div class="hero">
+    <h1>How much are you leaving<br>on <strong>the table?</strong></h1>
+    <p>Calculate your idle collateral cost vs POTS Money yield</p>
   </div>
 
-  <!-- Input Card -->
+  <!-- POSITION DETAILS -->
 
   <div class="card">
-    <div class="card-header">
-      <span class="card-label">Position Details</span>
-    </div>
-    <div class="card-body">
+    <div class="card-label">Position Details</div>
 
 ```
-  <div class="field">
-    <div class="flabel">Collateral Amount</div>
-    <div class="input-row">
-      <span class="ipfx">$</span>
-      <input type="number" id="amount" value="5000" min="1" max="10000000" inputmode="numeric"/>
-      <span class="isfx">USDC</span>
-    </div>
+<div class="field-label">Collateral Amount</div>
+<div class="amount-row">
+  <div class="amount-input-wrap">
+    <span class="amount-prefix">$</span>
+    <input
+      class="amount-input"
+      id="collateral"
+      type="number"
+      value="5000"
+      min="1"
+      max="10000000"
+      oninput="recalc()"
+    >
   </div>
+  <span class="amount-unit">USDC</span>
+</div>
 
-  <div class="field">
-    <div class="flabel">Resolution Window</div>
-    <div class="slider-disp">
-      <span class="sval" id="dDisp">14</span>
-      <span class="sunit">DAYS</span>
-    </div>
-    <input type="range" id="days" min="1" max="90" value="14"/>
-    <div class="dpills">
-      <div class="dpill" data-d="3">3d</div>
-      <div class="dpill on" data-d="14">14d</div>
-      <div class="dpill" data-d="30">30d</div>
-      <div class="dpill" data-d="60">60d</div>
-      <div class="dpill" data-d="90">90d</div>
-    </div>
-  </div>
-
-  <div class="field">
-    <div class="flabel">POTS Money Est. APY</div>
-    <div class="apygrid">
-      <div class="apybtn" data-i="0" data-apy="5"><span class="apypct">5%</span><span class="apylbl">Safe</span></div>
-      <div class="apybtn on1" data-i="1" data-apy="8"><span class="apypct">8%</span><span class="apylbl">Base</span></div>
-      <div class="apybtn" data-i="2" data-apy="12"><span class="apypct">12%</span><span class="apylbl">Bull</span></div>
-      <div class="apybtn" data-i="3" data-apy="18"><span class="apypct">18%</span><span class="apylbl">Moon</span></div>
-    </div>
-  </div>
-
+<div class="field-label">Resolution Window</div>
+<div class="days-row">
+  <span class="days-display" id="days-display">14</span>
+  <span class="days-unit">DAYS</span>
+</div>
+<div class="preset-grid">
+  <button class="preset-btn" onclick="setDays(3)">3d</button>
+  <button class="preset-btn active" onclick="setDays(14)">14d</button>
+  <button class="preset-btn" onclick="setDays(30)">30d</button>
+  <button class="preset-btn" onclick="setDays(60)">60d</button>
+  <button class="preset-btn" onclick="setDays(90)">90d</button>
 </div>
 ```
 
   </div>
 
-  <!-- Compare Wrap -->
+  <!-- APY SELECTOR -->
 
-  <div class="compare-wrap">
-
-  <!-- Polymarket Card -->
-
-  <div class="rcard dead">
-    <div class="rcard-top">
-      <div class="rcard-platform">
-        <div class="rcard-icon">❌</div>
-        <div>
-          <div class="rcard-name">Polymarket / Others</div>
-          <div class="rcard-sub">No yield layer</div>
-        </div>
-      </div>
-    </div>
-    <div class="ryield-label">Yield on your collateral</div>
-    <div class="ryield" id="polyYield">$0.00</div>
-    <div class="prog-wrap">
-      <div class="prog-labels">
-        <span class="prog-yes">YIELD 0%</span>
-        <span class="prog-no">IDLE 100%</span>
-      </div>
-      <div class="prog-track">
-        <div class="prog-fill" style="width:0%"></div>
-      </div>
-    </div>
-    <div class="btn-row">
-      <div class="btn btn-red">LOCKED<span class="btn-sub" id="polySub">$5,000 for 14 days</span></div>
-      <div class="btn" style="background:#1A1A24;color:#6B7280;">EARNING<span class="btn-sub">$0.00</span></div>
+  <div class="card">
+    <div class="card-label">POTS Money Est. APY</div>
+    <div class="apy-grid">
+      <button class="apy-btn" onclick="setApy(5, this)">
+        <span class="apy-pct">5%</span>
+        <span class="apy-label">Safe</span>
+      </button>
+      <button class="apy-btn active" onclick="setApy(8, this)">
+        <span class="apy-pct">8%</span>
+        <span class="apy-label">Base</span>
+      </button>
+      <button class="apy-btn" onclick="setApy(12, this)">
+        <span class="apy-pct">12%</span>
+        <span class="apy-label">Bull</span>
+      </button>
+      <button class="apy-btn" onclick="setApy(18, this)">
+        <span class="apy-pct">18%</span>
+        <span class="apy-label">Moon</span>
+      </button>
     </div>
   </div>
 
-  <!-- POTS Card -->
+  <!-- COMPARE CARDS -->
 
-  <div class="rcard live">
-    <div class="rcard-top">
-      <div class="rcard-platform">
-        <div class="rcard-icon">✅</div>
-        <div>
-          <div class="rcard-name">POTS Money</div>
-          <div class="rcard-sub">DeFi yield layer active</div>
-        </div>
-      </div>
+  <div class="compare-grid">
+    <div class="compare-card idle">
+      <span class="compare-icon">❌</span>
+      <div class="compare-name">Polymarket / Others</div>
+      <div class="compare-sub">No yield layer</div>
     </div>
-    <div class="ryield-label">Yield on your collateral</div>
-    <div class="ryield" id="potsYield">$15.34</div>
-    <div class="prog-wrap">
-      <div class="prog-labels">
-        <span class="prog-yes" id="progYesLabel">YIELD 100%</span>
-        <span class="prog-no">IDLE 0%</span>
-      </div>
-      <div class="prog-track">
-        <div class="prog-fill" id="progFill" style="width:100%"></div>
-      </div>
-    </div>
-    <div class="btn-row">
-      <div class="btn btn-green">EARNING<span class="btn-sub" id="potsSub">$15.34 at 8% APY</span></div>
-      <div class="btn" style="background:#1A1A24;color:#6B7280;">IDLE<span class="btn-sub">$0.00</span></div>
-    </div>
-  </div><!-- end POTS card -->
-  </div><!-- end compare-wrap -->
-
-  <!-- Verdict -->
-
-  <div class="vcard">
-    <div class="vtag">⚡ Verdict</div>
-    <div class="vbody" id="vText">Loading...</div>
-  </div>
-
-  <!-- Bento Stats -->
-
-  <div class="bento">
-    <div class="bcard">
-      <div class="blbl">Daily Yield</div>
-      <div class="bnum" id="statD" style="color:#00E87A">$1.10</div>
-      <div class="bsub">on POTS Money</div>
-    </div>
-    <div class="bcard">
-      <div class="blbl">Annual</div>
-      <div class="bnum" id="statA" style="color:#2D85FF">$400</div>
-      <div class="bsub">projected yield</div>
-    </div>
-    <div class="bcard wide">
-      <div class="blbl">Capital Utilisation — Polymarket vs POTS</div>
-      <div class="bp-track">
-        <div class="bp-fill" id="bpFill" style="width:0%"></div>
-      </div>
-      <div class="bp-labels">
-        <span>Polymarket: 0% (idle)</span>
-        <span id="bpLabel">POTS: 8% APY active</span>
-      </div>
+    <div class="compare-card earning">
+      <span class="compare-icon">✅</span>
+      <div class="compare-name">POTS Money</div>
+      <div class="compare-sub">DeFi yield layer active</div>
     </div>
   </div>
 
-  <!-- Breakdown -->
+  <!-- RESULT: POLYMARKET -->
 
-  <div class="bkcard">
-    <div class="bkhead">
-      <span style="font-size:12px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;">Breakdown</span>
-      <span style="font-size:12px;color:#2D85FF;font-weight:600;">Details</span>
-    </div>
-    <div class="bkrow"><span class="bk">Position Size</span><span class="bv" id="bAmt" style="color:#fff">$5,000</span></div>
-    <div class="bkrow"><span class="bk">Resolution Window</span><span class="bv" id="bDays" style="color:#fff">14 days</span></div>
-    <div class="bkrow"><span class="bk">APY Selected</span><span class="bv" id="bApy" style="color:#2D85FF">8%</span></div>
-    <div class="bkrow"><span class="bk">Daily Rate</span><span class="bv" id="bRate" style="color:#2D85FF">0.0219%</span></div>
-    <div class="bkrow"><span class="bk">Polymarket Yield</span><span class="bv" style="color:#FF3D3D">$0.00</span></div>
-    <div class="bkrow"><span class="bk">POTS Money Yield</span><span class="bv" id="bPots" style="color:#00E87A">$0.00</span></div>
-    <div class="bkrow"><span class="bk">Left on the Table</span><span class="bv" id="bLost" style="color:#FF3D3D">$0.00</span></div>
-  </div>
-
-  <!-- Footer -->
-
-  <div class="fcard">
-    <div class="fbrand">POTS <span>Ecosystem</span></div>
-    <div class="flinks">
-      <a class="flink" href="https://x.com/pots_market" target="_blank">@pots_market</a>
-      <a class="flink" href="https://x.com/pots_money" target="_blank">@pots_money</a>
+  <div class="result-card" id="polymarket-result">
+    <div class="card-label">Yield on Your Collateral — Polymarket / Others</div>
+    <div class="result-amount idle" id="poly-yield">$0.00</div>
+    <div class="result-bar-row">
+      <span class="result-bar-label yield">YIELD 0%</span>
+      <span class="result-bar-label idle-lbl">IDLE 100%</span>
     </div>
   </div>
 
-  <div class="disc">APY figures are illustrative estimates for educational purposes only. Not financial advice. DYOR. Built by a POTS community member.</div>
+  <!-- RESULT: POTS -->
 
-</div>
+  <div class="result-card" id="pots-result">
+    <div class="card-label">Yield on Your Collateral — POTS Money</div>
+    <div class="result-amount earning" id="pots-yield">$15.34</div>
+    <div class="result-bar-row">
+      <span class="result-bar-label yield" id="pots-apy-label">YIELD 8% APY</span>
+      <span class="result-bar-label idle-lbl">IDLE 0%</span>
+    </div>
+  </div>
+
+  <!-- EARN/IDLE GRID -->
+
+  <div class="earn-idle-grid">
+    <div class="earn-idle-card">
+      <div class="ei-label">Earning</div>
+      <div class="ei-amount green" id="ei-earning">$15.34</div>
+      <div class="ei-sub" id="ei-earning-sub">at 8% APY</div>
+    </div>
+    <div class="earn-idle-card">
+      <div class="ei-label">Idle</div>
+      <div class="ei-amount red">$0.00</div>
+      <div class="ei-sub">on Polymarket</div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+
+  <div class="verdict-card">
+    <div class="verdict-title">⚡ Verdict</div>
+    <p class="verdict-text" id="verdict-text">
+      You locked <span class="hl-amount">$5,000</span> for <span class="hl-days">14 days</span>. Polymarket earned <span class="hl-zero">$0.00</span>. POTS Money at 8% APY earns <span class="hl-yield">$15.34</span>. That's <span class="hl-table">$15.34</span> left on the table — every single time you use a platform without a yield layer.
+    </p>
+  </div>
+
+  <!-- STATS -->
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Daily Yield</div>
+      <div class="stat-value" id="daily-yield">$1.10</div>
+      <div class="stat-sub">on POTS Money</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Annual</div>
+      <div class="stat-value" id="annual-yield">$400</div>
+      <div class="stat-sub">projected yield</div>
+    </div>
+  </div>
+
+  <!-- CAPITAL UTILISATION -->
+
+  <div class="util-card">
+    <div class="card-label">Capital Utilisation — Polymarket vs POTS</div>
+    <div class="util-labels">
+      <span>Polymarket: 0% (idle)</span>
+      <span id="util-pots-label">POTS: 8% APY</span>
+    </div>
+    <div class="util-bar-track">
+      <div class="util-bar-fill" id="util-bar"></div>
+    </div>
+  </div>
+
+  <!-- BREAKDOWN -->
+
+  <div class="breakdown-card">
+    <div class="breakdown-header" onclick="toggleBreakdown()">
+      <span class="card-label" style="margin:0">Breakdown</span>
+      <button class="breakdown-toggle" id="toggle-btn">Details ▾</button>
+    </div>
+    <div class="breakdown-table" id="breakdown-table">
+      <div class="breakdown-row">
+        <span class="breakdown-key">Position Size</span>
+        <span class="breakdown-val" id="bd-size">$5,000</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-key">Resolution Window</span>
+        <span class="breakdown-val" id="bd-window">14 days</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-key">APY Selected</span>
+        <span class="breakdown-val blue" id="bd-apy">8%</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-key">Daily Rate</span>
+        <span class="breakdown-val blue" id="bd-daily-rate">0.0219%</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-key">Polymarket Yield</span>
+        <span class="breakdown-val red">$0.00</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-key">POTS Money Yield</span>
+        <span class="breakdown-val green" id="bd-pots-yield">$15.34</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-key">Left on the Table</span>
+        <span class="breakdown-val red" id="bd-left">$15.34</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-brand">POTS <span>Ecosystem</span></div>
+  <div class="footer-handles">
+    <a href="https://x.com/pots_market" target="_blank">@pots_market</a>
+    <a href="https://x.com/pots_money" target="_blank">@pots_money</a>
+  </div>
+  <p class="footer-disclaimer">
+    APY figures are illustrative estimates for educational purposes only. Not financial advice. DYOR. Built by a POTS community member.
+  </p>
+</footer>
 
 <script>
-var apy=8;
+  let currentDays = 14;
+  let currentApy = 8;
 
-function fmt(n,d){
-  d=d!==undefined?d:2;
-  if(n>=1000000)return'$'+(n/1000000).toFixed(2)+'M';
-  if(n>=1000)return'$'+n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
-  return'$'+n.toFixed(d);
-}
-
-function fl(el){
-  el.classList.remove('fl');
-  void el.offsetWidth;
-  el.classList.add('fl');
-}
-
-function calc(){
-  var am=parseFloat(document.getElementById('amount').value)||0;
-  var dy=parseInt(document.getElementById('days').value)||1;
-  var dr=apy/100/365;
-  var py=am*dr*dy;
-  var dly=am*dr;
-  var ann=am*apy/100;
-
-  var pyEl=document.getElementById('polyYield');
-  var ptEl=document.getElementById('potsYield');
-  pyEl.textContent='$0.00';
-  ptEl.textContent=fmt(py);
-  fl(pyEl); fl(ptEl);
-
-  document.getElementById('polySub').textContent=fmt(am,0)+' for '+dy+'d';
-  document.getElementById('potsSub').textContent=fmt(py)+' at '+apy+'% APY';
-  document.getElementById('progYesLabel').textContent='YIELD '+apy+'% APY';
-
-  // Progress — show utilisation
-  var pct=am>0?Math.min(apy*4,100):0;
-  document.getElementById('progFill').style.width=pct+'%';
-  document.getElementById('bpFill').style.width=pct+'%';
-  document.getElementById('bpLabel').textContent='POTS: '+apy+'% APY';
-
-  var sdEl=document.getElementById('statD');
-  var saEl=document.getElementById('statA');
-  sdEl.textContent=fmt(dly);
-  saEl.textContent=fmt(ann,0);
-  fl(sdEl); fl(saEl);
-
-  var vEl=document.getElementById('vText');
-  if(!am){
-    vEl.innerHTML='Enter a position size above.';
-  } else {
-    vEl.innerHTML='You locked <strong>'+fmt(am,0)+'</strong> for <strong>'+dy+' day'+(dy!==1?'s':'')+'</strong>. Polymarket earned <span class="r">$0.00</span>. POTS Money at '+apy+'% APY earns <span class="g">'+fmt(py)+'</span>. That\'s <strong>'+fmt(py)+'</strong> left on the table — every single time you use a platform without a yield layer.';
+  function fmt(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
-  document.getElementById('bAmt').textContent=fmt(am,0);
-  document.getElementById('bDays').textContent=dy+' day'+(dy!==1?'s':'');
-  document.getElementById('bApy').textContent=apy+'%';
-  document.getElementById('bRate').textContent=(dr*100).toFixed(4)+'%';
-  var bpEl=document.getElementById('bPots');
-  var blEl=document.getElementById('bLost');
-  bpEl.textContent=fmt(py);
-  blEl.textContent=fmt(py);
-  fl(bpEl); fl(blEl);
-}
+  function fmtCompact(n) {
+    if (n >= 1000) return '$' + Math.round(n).toLocaleString('en-US');
+    return '$' + fmt(n);
+  }
 
-document.getElementById('amount').addEventListener('input',calc);
+  function setDays(d) {
+    currentDays = d;
+    document.getElementById('days-display').textContent = d;
+    document.querySelectorAll('.preset-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent === d + 'd');
+    });
+    recalc();
+  }
 
-document.getElementById('days').addEventListener('input',function(){
-  document.getElementById('dDisp').textContent=this.value;
-  document.querySelectorAll('.dpill').forEach(function(p){
-    p.classList.toggle('on',parseInt(p.dataset.d)===parseInt(document.getElementById('days').value));
-  });
-  calc();
-});
+  function setApy(a, el) {
+    currentApy = a;
+    document.querySelectorAll('.apy-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    recalc();
+  }
 
-document.querySelectorAll('.dpill').forEach(function(p){
-  p.addEventListener('click',function(){
-    var d=parseInt(this.dataset.d);
-    document.getElementById('days').value=d;
-    document.getElementById('dDisp').textContent=d;
-    document.querySelectorAll('.dpill').forEach(function(x){x.classList.remove('on');});
-    this.classList.add('on');
-    calc();
-  });
-});
+  function toggleBreakdown() {
+    const t = document.getElementById('breakdown-table');
+    const btn = document.getElementById('toggle-btn');
+    t.classList.toggle('open');
+    btn.textContent = t.classList.contains('open') ? 'Details ▴' : 'Details ▾';
+  }
 
-document.querySelectorAll('.apybtn').forEach(function(b){
-  b.addEventListener('click',function(){
-    var i=parseInt(this.dataset.i);
-    document.querySelectorAll('.apybtn').forEach(function(x){x.className='apybtn';});
-    this.classList.add('on'+i);
-    apy=parseInt(this.dataset.apy);
-    calc();
-  });
-});
+  function recalc() {
+    const collateral = parseFloat(document.getElementById('collateral').value) || 0;
+    const apy = currentApy / 100;
+    const days = currentDays;
 
-calc();
+    const potsYield = collateral * apy * (days / 365);
+    const dailyYield = collateral * apy / 365;
+    const annualYield = collateral * apy;
+    const dailyRate = (apy / 365) * 100;
+
+    // Update result displays
+    document.getElementById('pots-yield').textContent = '$' + fmt(potsYield);
+    document.getElementById('pots-apy-label').textContent = `YIELD ${currentApy}% APY`;
+    document.getElementById('ei-earning').textContent = '$' + fmt(potsYield);
+    document.getElementById('ei-earning-sub').textContent = `at ${currentApy}% APY`;
+
+    // Stats
+    document.getElementById('daily-yield').textContent = '$' + fmt(dailyYield);
+    document.getElementById('annual-yield').textContent = fmtCompact(annualYield);
+
+    // Util bar — scale APY visually (18% = 100%)
+    const barPct = Math.min((currentApy / 18) * 100, 100);
+    document.getElementById('util-bar').style.width = barPct + '%';
+    document.getElementById('util-pots-label').textContent = `POTS: ${currentApy}% APY`;
+
+    // Breakdown
+    document.getElementById('bd-size').textContent = '$' + collateral.toLocaleString('en-US');
+    document.getElementById('bd-window').textContent = days + ' days';
+    document.getElementById('bd-apy').textContent = currentApy + '%';
+    document.getElementById('bd-daily-rate').textContent = dailyRate.toFixed(4) + '%';
+    document.getElementById('bd-pots-yield').textContent = '$' + fmt(potsYield);
+    document.getElementById('bd-left').textContent = '$' + fmt(potsYield);
+
+    // Verdict
+    const collFmt = '$' + collateral.toLocaleString('en-US');
+    document.getElementById('verdict-text').innerHTML =
+      `You locked <span class="hl-amount">${collFmt}</span> for <span class="hl-days">${days} days</span>. ` +
+      `Polymarket earned <span class="hl-zero">$0.00</span>. ` +
+      `POTS Money at ${currentApy}% APY earns <span class="hl-yield">$${fmt(potsYield)}</span>. ` +
+      `That's <span class="hl-table">$${fmt(potsYield)}</span> left on the table — every single time you use a platform without a yield layer.`;
+  }
+
+  // Init
+  recalc();
+  setTimeout(() => {
+    document.getElementById('util-bar').style.width = ((currentApy / 18) * 100) + '%';
+  }, 100);
 </script>
 
 </body>
